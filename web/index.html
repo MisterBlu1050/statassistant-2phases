@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StatAssistant · XL AI — Statistical Analysis</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo-dot"></span>
+      <div>
+        <strong>StatAssistant</strong>
+        <span class="badge" data-i18n="badge">XL AI · 2-Fasen ZDR</span>
+      </div>
+    </div>
+    <div class="topbar-controls">
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button id="langNL" class="tab-btn active" type="button">NL</button>
+        <button id="langEN" class="tab-btn" type="button">EN</button>
+      </div>
+      <select id="tierSelect" aria-label="Governance tier">
+        <option value="local_expert" selected data-i18n="tier_local">🛡️ Local Expert (0 netwerkverkeer)</option>
+        <option value="autonome" data-i18n="tier_auto">⚙️ Autonoom Fase 1 (0 AI)</option>
+        <option value="confidentiel_zdr" data-i18n="tier_zdr">🏢 Vertrouwelijk / Enterprise ZDR</option>
+      </select>
+      <button id="btnGov" class="btn-ghost" type="button" data-i18n="btn_gov">Governance &amp; Audit</button>
+      <button id="btnPurge" class="btn-ghost danger-text" type="button" hidden data-i18n="btn_purge">ZDR Wissen</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="stepper" aria-label="Progress">
+      <div class="step active" id="st1"><span>1</span> <em data-i18n="step1">Gegevens &amp; AVG</em></div>
+      <div class="step" id="st2"><span>2</span> <em data-i18n="step2">Vraag &amp; Plan</em></div>
+      <div class="step" id="st3"><span>3</span> <em data-i18n="step3">Fase 1 &amp; Fase 2</em></div>
+      <div class="step" id="st4"><span>4</span> <em data-i18n="step4">Falsifieerbare export</em></div>
+    </nav>
+
+    <!-- Step 1: Ingestion & GDPR -->
+    <section class="card" id="secIngest">
+      <h1 data-i18n="h1_ingest">1. Importeer uw gegevens <em>(Fase 1 — 0 % AI)</em></h1>
+      <p class="lead" data-i18n="lead_ingest">Deterministische Python/SciPy-berekening. Individuele rijen worden nooit naar een LLM verzonden.</p>
+
+      <div class="tabs-mini">
+        <button class="tab-btn active" id="tabFile" type="button" data-i18n="tab_file">📁 Bestand (CSV, TSV, XLSX)</button>
+        <button class="tab-btn" id="tabPaste" type="button" data-i18n="tab_paste">📋 Tabel plakken</button>
+        <button class="btn-secondary" id="btnSample" type="button" data-i18n="btn_sample" style="margin-left:auto;">✨ Voorbeelddataset laden</button>
+      </div>
+
+      <!-- Enterprise ZDR LLM Panel (shown only when tier === confidentiel_zdr) -->
+      <div id="llmConfigBox" class="expander" hidden style="margin-bottom:14px;">
+        <strong data-i18n="llm_panel_title">🏢 Enterprise / ZDR LLM-configuratie (alleen geaggregeerde JSON)</strong>
+        <div class="grid-3">
+          <label>Provider
+            <select id="llmProvider">
+              <option value="openai_compat">OpenAI / Azure / Ollama</option>
+              <option value="gemini">Google Gemini API</option>
+            </select>
+          </label>
+          <label>Model
+            <input type="text" id="llmModel" value="llama3.1" />
+          </label>
+          <label>Endpoint
+            <input type="text" id="llmEndpoint" value="http://localhost:11434/v1/chat/completions" />
+          </label>
+        </div>
+        <label style="display:block;margin-top:8px;">API Key (optional for local Ollama)
+          <input type="password" id="llmApiKey" placeholder="sk-... / AIza..." style="width:100%;padding:8px;border:1px solid var(--border);border-radius:8px;" />
+        </label>
+      </div>
+
+      <div id="paneFile">
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="fileInput" accept=".csv,.tsv,.txt,.xlsx" hidden />
+          <strong id="dropLabel" data-i18n="drop_label">Sleep uw bestand hierheen of klik om te kiezen</strong>
+          <small data-i18n="drop_sub">CSV · TSV · Excel (.xlsx) — scheidingsteken en decimaal worden automatisch herkend</small>
+        </label>
+      </div>
+
+      <div id="panePaste" hidden>
+        <textarea id="pasteInput" rows="5" data-i18n-placeholder="paste_ph" placeholder="Plak uw CSV/TSV-tabel hier…"></textarea>
+        <button id="btnIngestPaste" class="btn-primary" type="button" style="margin-top:10px;" data-i18n="btn_load_paste">Geplakte gegevens laden</button>
+      </div>
+
+      <details class="expander">
+        <summary data-i18n="import_opts">⚙️ Importinstellingen (ontbrekende codes, scheidingsteken)</summary>
+        <div class="grid-3">
+          <label><span data-i18n="opt_sep">Scheidingsteken</span>
+            <select id="optSep"><option value="auto">Auto</option><option value=",">Comma (,)</option><option value=";">Semicolon (;)</option><option value="\t">Tab</option></select>
+          </label>
+          <label><span data-i18n="opt_dec">Decimaal</span>
+            <select id="optDec"><option value="auto">Auto</option><option value=".">Dot (.)</option><option value=",">Comma (,)</option></select>
+          </label>
+          <label><span data-i18n="opt_missing">Ontbrekende codes</span>
+            <input type="text" id="optMissing" value="-999, -99" />
+          </label>
+        </div>
+      </details>
+
+      <div id="piiBox" class="alert alert-danger" hidden></div>
+      <div id="ingestOk" class="alert alert-success" hidden></div>
+      <div id="previewWrap" hidden>
+        <details class="expander">
+          <summary data-i18n="preview_sum">🔍 Voorbeeld (eerste 5 rijen) &amp; kolomtypen</summary>
+          <div id="previewTable" class="table-scroll"></div>
+          <div id="colTypesGrid" class="col-types-grid"></div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Step 2: Question & Planner -->
+    <section class="card" id="secPlan" hidden>
+      <h2 data-i18n="h2_plan">2. Uw onderzoeksvraag</h2>
+      <div class="q-row">
+        <textarea id="questionInput" rows="2" data-i18n-placeholder="q_ph" placeholder="Stel een enkelvoudige of meervoudige vraag…"></textarea>
+        <div class="q-side">
+          <label><span data-i18n="opt_alpha">Drempel α</span>
+            <select id="optAlpha"><option value="0.05" selected>0.05</option><option value="0.01">0.01</option><option value="0.10">0.10</option></select>
+          </label>
+          <button id="btnAutoPlan" class="btn-primary" type="button" data-i18n="btn_detect">⚡ Analyses detecteren</button>
+        </div>
+      </div>
+
+      <div id="planWarning" class="alert alert-warn" hidden></div>
+      <div id="planPreview" hidden>
+        <div id="planTable" class="table-scroll"></div>
+        <button id="btnRunAll" class="btn-primary btn-lg" type="button" style="margin-top:12px;" data-i18n="btn_run_all">▶️ Fase 1 &amp; Fase 2 uitvoeren</button>
+      </div>
+
+      <details class="expander">
+        <summary data-i18n="manual_sum">🎛️ Handmatige Expertmodus (Logistisch, Correlaties, Herhaalde metingen, ANOVA…)</summary>
+        <div class="grid-3">
+          <label><span data-i18n="man_method">Methode</span>
+            <select id="manMode">
+              <option value="anova">ANOVA / Welch (+ Post-Hoc)</option>
+              <option value="kw">Kruskal-Wallis (+ Dunn-Holm)</option>
+              <option value="ind">Independent t-test / Welch</option>
+              <option value="mw">Mann-Whitney U</option>
+              <option value="pair">Paired t-test (Before/After)</option>
+              <option value="signed">Wilcoxon signed-rank</option>
+              <option value="rm_anova">Repeated-measures ANOVA (≥ 3)</option>
+              <option value="reg">Simple linear regression</option>
+              <option value="quad">Quadratic regression (U-curve)</option>
+              <option value="multi">Multiple regression (HC3 + VIF)</option>
+              <option value="logit">Binary logistic regression (OR &amp; AUC)</option>
+              <option value="corr">Correlation matrix (Pearson/Spearman)</option>
+              <option value="chi">Contingency table (χ² / Fisher / MC)</option>
+              <option value="desc">Descriptive statistics</option>
+            </select>
+          </label>
+          <label><span data-i18n="man_y">Doelvariabele (Y)</span>
+            <select id="manY"></select>
+          </label>
+          <label><span data-i18n="man_x">Factor(en) / Voorspeller(s) (X)</span>
+            <select id="manX" multiple size="4"></select>
+          </label>
+        </div>
+        <button id="btnRunManual" class="btn-secondary" type="button" style="margin-top:10px;" data-i18n="btn_run_man">▶️ Handmatige analyse starten</button>
+      </details>
+    </section>
+
+    <!-- Step 3: Results -->
+    <section class="card" id="secResults" hidden>
+      <div class="results-header">
+        <h2 data-i18n="h2_res">3. Gecertificeerde resultaten (Fase 1) &amp; Interpretatie (Fase 2)</h2>
+        <div id="resultTabs" class="tabs-mini"></div>
+      </div>
+      <div id="resultBody"></div>
+    </section>
+
+    <!-- Step 4: Export -->
+    <section class="card" id="secExport" hidden>
+      <h2 data-i18n="h2_exp">4. Falsifieerbaar rapport exporteren</h2>
+      <p class="lead" data-i18n="lead_exp">Dubbele SHA-256-vingerafdruk (origineel + geanonimiseerd), gecertificeerde omgeving en volledige reproduceerbaarheid.</p>
+      <div class="export-grid">
+        <button class="btn-export" data-fmt="pdf" type="button" data-i18n="exp_pdf">📕 PDF-rapport (grafieken)</button>
+        <button class="btn-export" data-fmt="docx" type="button" data-i18n="exp_docx">📘 Word-rapport (.docx)</button>
+        <button class="btn-export" data-fmt="markdown" type="button" data-i18n="exp_md">📄 Markdown (.md)</button>
+        <button class="btn-export" data-fmt="script" type="button" data-i18n="exp_py">🐍 Python-script (.py)</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Governance Modal -->
+  <div id="govModal" class="modal" hidden>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3 data-i18n="gov_title">🛡️ XL AI Governance, AVG &amp; Auditlogboek</h3>
+        <button id="btnCloseGov" class="btn-ghost" type="button">✕</button>
+      </div>
+      <div id="govContent">Loading…</div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

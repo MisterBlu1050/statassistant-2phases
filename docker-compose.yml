@@ -1,0 +1,27 @@
+services:
+  stat-assistant:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    expose:
+      - "8000"
+    volumes:
+      - ./audit_log.jsonl:/app/audit_log.jsonl
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file: .env
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - stat-assistant
+
+volumes:
+  caddy_data:
+  caddy_config:
