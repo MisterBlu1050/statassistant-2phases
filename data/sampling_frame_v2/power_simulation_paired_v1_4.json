@@ -1,0 +1,74 @@
+{
+  "seed": 20261124,
+  "paired_scenarios": [
+    {
+      "frame": "Top 50 constant harmonise (First_Top50_Year, hors pilote)",
+      "N": 2000,
+      "n_per_5y_block": 250,
+      "delta_39": 3.0,
+      "icc_true": 0.3703,
+      "n_sim": 2000,
+      "kish_weight_deff": 1.069,
+      "mean_artist_clusters": 1389.0,
+      "mean_songs_per_artist": 1.44,
+      "mean_estimated_icc_reml": 0.3696,
+      "power_reml": 0.884,
+      "wilson_95_ci_reml": [
+        0.8692,
+        0.8973
+      ],
+      "power_wls_cr1": 0.7125,
+      "wilson_95_ci_wls_cr1": [
+        0.6923,
+        0.7319
+      ],
+      "concordant_significant_both": 0.697
+    },
+    {
+      "frame": "Top 50 constant harmonise (First_Top50_Year, hors pilote)",
+      "N": 2000,
+      "n_per_5y_block": 250,
+      "delta_39": 3.0,
+      "icc_true": 0.3,
+      "n_sim": 1000,
+      "kish_weight_deff": 1.069,
+      "mean_artist_clusters": 1390.2,
+      "mean_songs_per_artist": 1.439,
+      "mean_estimated_icc_reml": 0.3002,
+      "power_reml": 0.89,
+      "wilson_95_ci_reml": [
+        0.8691,
+        0.9079
+      ],
+      "power_wls_cr1": 0.738,
+      "wilson_95_ci_wls_cr1": [
+        0.7099,
+        0.7643
+      ],
+      "concordant_significant_both": 0.729
+    },
+    {
+      "frame": "Top 50 constant harmonise (First_Top50_Year, hors pilote)",
+      "N": 2000,
+      "n_per_5y_block": 250,
+      "delta_39": 3.0,
+      "icc_true": 0.45,
+      "n_sim": 1000,
+      "kish_weight_deff": 1.069,
+      "mean_artist_clusters": 1390.6,
+      "mean_songs_per_artist": 1.438,
+      "mean_estimated_icc_reml": 0.449,
+      "power_reml": 0.888,
+      "wilson_95_ci_reml": [
+        0.8669,
+        0.9061
+      ],
+      "power_wls_cr1": 0.706,
+      "wilson_95_ci_wls_cr1": [
+        0.677,
+        0.7334
+      ],
+      "concordant_significant_both": 0.679
+    }
+  ]
+}

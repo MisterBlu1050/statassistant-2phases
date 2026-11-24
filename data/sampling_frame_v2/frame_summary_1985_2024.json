@@ -1,13 +1,15 @@
 {
+  "version": "1.4",
   "source": "lescharts.com (SNEP weekly singles archive, 1985-2024)",
   "total_weeks_compiled": 2121,
   "weeks_with_http_200": 2121,
-  "weeks_with_gaps_gt_7d": 3,
-  "min_weeks_in_a_year": 52,
-  "max_weeks_in_a_year": 54,
+  "weeks_with_missing_top50_ranks": 6,
   "total_distinct_works_all_languages": 20809,
+  "total_distinct_top50_works_all_languages": 10299,
+  "top50_works_shifted_block_by_First_Top50_Week": 65,
   "total_distinct_artists": 9135,
   "mean_works_per_artist": 2.278,
+  "pilot_manifest_total": 131,
   "pilot_works_matched_in_frame": 100,
   "works_by_block_all_languages": {
     "1985-1989": 941,
@@ -19,65 +21,20 @@
     "2015-2019": 5145,
     "2020-2024": 5273
   },
-  "works_top50_constant_by_block_all_languages": {
+  "works_top50_by_First_Top50_Block_all_languages": {
     "1985-1989": 941,
     "1990-1994": 1045,
-    "1995-1999": 1127,
-    "2000-2004": 1239,
-    "2005-2009": 1159,
-    "2010-2014": 1139,
-    "2015-2019": 1683,
-    "2020-2024": 1966
+    "1995-1999": 1121,
+    "2000-2004": 1241,
+    "2005-2009": 1160,
+    "2010-2014": 1105,
+    "2015-2019": 1697,
+    "2020-2024": 1989
   },
-  "depth_transitions_first_15": [
-    {
-      "Week_Date": "1985-01-01",
-      "Max_Rank": 50,
-      "Rows_Parsed": 51
-    },
-    {
-      "Week_Date": "1998-03-07",
-      "Max_Rank": 100,
-      "Rows_Parsed": 100
-    },
-    {
-      "Week_Date": "2000-11-04",
-      "Max_Rank": 98,
-      "Rows_Parsed": 98
-    },
-    {
-      "Week_Date": "2000-11-11",
-      "Max_Rank": 100,
-      "Rows_Parsed": 100
-    },
-    {
-      "Week_Date": "2001-07-21",
-      "Max_Rank": 99,
-      "Rows_Parsed": 99
-    },
-    {
-      "Week_Date": "2001-07-28",
-      "Max_Rank": 100,
-      "Rows_Parsed": 100
-    },
-    {
-      "Week_Date": "2012-02-18",
-      "Max_Rank": 200,
-      "Rows_Parsed": 200
-    },
-    {
-      "Week_Date": "2016-02-27",
-      "Max_Rank": 199,
-      "Rows_Parsed": 167
-    },
-    {
-      "Week_Date": "2016-03-05",
-      "Max_Rank": 200,
-      "Rows_Parsed": 200
-    }
-  ],
   "sha256": {
-    "weeks_inventory_1985_2024.csv": "38708b1427a188f0149ce2c848fe574cafd988ea0e71abcc9dac1063fb75aac0",
-    "sampling_frame_works_1985_2024.csv": "a7d8a7c55371ca846c7df6bbdee620641a7ac5a891f1fb7df7e1840e7bdd8c04"
+    "pilot_manifest_131.csv": "240af2081ae2911488e4979449889768e0422645f72940f7fe57d65032847044",
+    "weeks_inventory_1985_2024.csv": "1ead136b19fd4f695f401226acfea6d4db9bf0e92f8238309dfec57ad8ab7ef8",
+    "sampling_frame_works_1985_2024.csv": "8210ccd1d2534410781fdf055b3f9464939635ec94f1abd8ad9cc48c36f3e277",
+    "pilot_matching_audit.csv": "2ec87229b242c0845f2dcb3d61abdf628b64f5139aec095683219c167a206242"
   }
 }
