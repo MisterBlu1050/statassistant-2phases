@@ -118,3 +118,19 @@ def test_flags_are_aggregated_without_rows():
     forbidden = {"records", "raw_rows", "raw_data", "dataframe"}
     assert not any(key in forbidden for f in flags for key in f)
     assert all("artist_0" not in str(f) for f in flags)
+
+
+def test_methodology_changes_are_included_in_analysis_hash():
+    df = _lexical_frame().drop(columns=["Artiste"])
+    plan = {"mode": "reg", "y": "MATTR_50", "xs": ["Annee"],
+            "alpha": 0.05, "language": "fr"}
+    meta = {"filename": "same-input.csv", "sha256_raw_file": "fixed-file-hash"}
+    unknown, _ = run_analysis(df, plan, meta)
+    purposive, _ = run_analysis(
+        df, {**plan, "study_design": {
+            "sampling_method": "non_probabilistic_purposive_selection",
+            "representative": False}}, meta,
+    )
+    assert unknown["metadata"]["sha256_analysis_json"] != purposive["metadata"]["sha256_analysis_json"]
+    assert purposive["plan"]["study_design"]["representative"] is False
+    assert "nonrepresentative_sampling" in _codes(purposive["flags"])
