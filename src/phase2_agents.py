@@ -16,6 +16,8 @@ import json
 import urllib.request
 from typing import Any
 
+from src.scientific_guardrails import render_scientific_warnings
+
 
 def assert_aggregated_only(contract: dict[str, Any]) -> None:
     """Pare-feu RGPD : garantit qu'aucune ligne brute n'est envoyée en Phase 2."""
@@ -489,7 +491,7 @@ def _agent3_business(contract: dict[str, Any]) -> str:
             f"*Réserve : cet extremum décrit l'échantillon observé et ne constitue pas à lui seul une prescription causale.*"
         )
 
-    verdict_word = "**Oui**" if res.get("significant") else "**Non**"
+    verdict_word = "**Oui**" if res.get("significant") else "**Non établi**"
 
     if mode in ("pair", "signed"):
         g0, g1 = groups[0], groups[1]
@@ -707,9 +709,23 @@ def run_phase2_interpretation(
             "llm_commentary": None,
         }
 
+    scientific_alerts, caveat = render_scientific_warnings(contract, lang)
+    if scientific_alerts:
+        output["agent1_methodology_audit"] = [
+            *output.get("agent1_methodology_audit", []), *scientific_alerts
+        ]
+        output["agent2_apa7_report"] = (
+            output.get("agent2_apa7_report", "") + "\n\n**Limites d'interprétation :** " + caveat
+        )
+        output["agent3_business_summary"] = (
+            output.get("agent3_business_summary", "") + "\n\n**Réserves scientifiques :** " + caveat
+        )
+
     if llm_config and llm_config.get("enabled"):
         try:
             output = _optional_llm_enrichment(contract, output, llm_config)
+            if caveat and output.get("llm_commentary"):
+                output["llm_commentary"] += "\n\n**Limites méthodologiques vérifiées :** " + caveat
         except Exception as exc:
             output["llm_error"] = f"LLM unavailable ({exc}) — fallback to local expert engine."
 
