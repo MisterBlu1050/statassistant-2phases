@@ -63,22 +63,38 @@ def _match_columns_in_clause(
     df: pd.DataFrame,
     col_types: dict[str, str],
 ) -> list[str]:
-    """Identifie les colonnes du DataFrame mentionnées dans une proposition (par nom ou modalité)."""
+    """Identifie les colonnes du DataFrame mentionnées dans une proposition (par nom ou modalité).
+
+    Passe 1 : correspondances exactes de noms de colonnes (frontières d'identifiant), masquées ensuite
+    dans la proposition afin qu'une colonne exacte (ex. MATTR_100) ne déclenche jamais de faux positif
+    partiel sur une colonne voisine (ex. MATTR_50).
+    Passe 2 : correspondances partielles par tokens significatifs ou modalités catégorielles.
+    """
     c_norm = _norm(clause)
-    # Correspondance par tokens : garder le nombre de tokens matchés pour éviter les faux positifs partiels
-    # (ex: "incidents crédit" matche 2/2 sur Incident_Credit vs 1/2 sur Encours_Credit_M)
-    matched: list[tuple[int, str, set[str]]] = []  # (position_dans_phrase, col, tokens_touches)
+    matched: list[tuple[int, str, set[str], bool]] = []  # (pos, col, tokens, is_exact)
+    exact_cols: set[str] = set()
+    exact_subtokens: set[str] = set()
 
-    for col, ctype in col_types.items():
-        if ctype == "ignored":
-            continue
-        col_norm = _norm(col)
-        pos = c_norm.find(col_norm)
-        if pos != -1:
-            matched.append((pos, col, {col_norm}))
-            continue
+    # Passe 1 : correspondances exactes d'identifiants de colonnes (les plus longs d'abord)
+    masked_norm = c_norm
+    candidates = [(col, _norm(col)) for col, ctype in col_types.items() if ctype != "ignored"]
+    for col, col_norm in sorted(candidates, key=lambda item: len(item[1]), reverse=True):
+        m = re.search(rf"(?<![a-z0-9_]){re.escape(col_norm)}(?![a-z0-9_])", masked_norm)
+        if m:
+            matched.append((m.start(), col, {col_norm}, True))
+            exact_cols.add(col)
+            for t in re.split(r"[_\s-]+", col_norm):
+                if len(t) >= 3:
+                    exact_subtokens.add(t)
+            # Masquer l'empan exact en conservant les indices de position
+            masked_norm = masked_norm[: m.start()] + (" " * (m.end() - m.start())) + masked_norm[m.end() :]
 
-        # Correspondance sur les tokens significatifs du nom de colonne (>= 3 caractères pour 'age', 'imc', 'crp', etc.)
+    # Passe 2 : correspondances partielles uniquement sur le texte non consommé par une correspondance exacte
+    for col, col_norm in candidates:
+        if col in exact_cols:
+            continue
+        ctype = col_types[col]
+
         tokens = [t for t in re.split(r"[_\s-]+", col_norm) if len(t) >= 3 and t not in STOP_TOKENS]
         if not tokens:
             tokens = [t for t in re.split(r"[_\s-]+", col_norm) if len(t) >= 3]
@@ -86,11 +102,19 @@ def _match_columns_in_clause(
         best_pos = None
         hit_tokens: set[str] = set()
         for tok in tokens:
+            if tok in exact_subtokens:
+                continue
             stem = tok[:-1] if len(tok) >= 6 and tok.endswith(("s", "e")) else tok
-            m = re.search(rf"\b{re.escape(stem)}\w*", c_norm)
+            m = re.search(rf"\b{re.escape(stem)}\w*", masked_norm)
             if m:
                 hit_tokens.add(tok)
                 best_pos = m.start() if best_pos is None else min(best_pos, m.start())
+
+        # Pour les colonnes multi-tokens (>= 3 tokens significatifs), éviter un faux positif sur 1 seul token
+        # lorsqu'au moins une colonne exacte a déjà été identifiée dans la proposition.
+        if best_pos is not None and exact_cols and len(tokens) >= 3 and len(hit_tokens) < 2:
+            best_pos = None
+            hit_tokens = set()
 
         # Correspondance par valeurs de modalités catégorielles (ex: "présentiel", "distanciel")
         if best_pos is None and ctype == "categorical":
@@ -100,7 +124,7 @@ def _match_columns_in_clause(
             for v in vals:
                 vn = _norm(v)
                 if len(vn) >= 4 and vn not in ("true", "false", "oui", "non"):
-                    m = re.search(rf"\b{re.escape(vn)}\w*", c_norm)
+                    m = re.search(rf"\b{re.escape(vn)}\w*", masked_norm)
                     if m:
                         val_hits += 1
                         first_vpos = m.start() if first_vpos is None else min(first_vpos, m.start())
@@ -109,17 +133,17 @@ def _match_columns_in_clause(
                 hit_tokens.add(f"__val_{col_norm}")
 
         if best_pos is not None:
-            matched.append((best_pos, col, hit_tokens))
+            matched.append((best_pos, col, hit_tokens, False))
 
     # Éliminer les correspondances partielles dont l'unique token touché est déjà couvert par une correspondance plus riche (>= 2 tokens)
     rich_tokens: set[str] = set()
-    for _, _, htoks in matched:
-        if len(htoks) >= 2:
+    for _, _, htoks, is_exact in matched:
+        if is_exact or len(htoks) >= 2:
             rich_tokens.update(htoks)
     filtered = [
         (pos, col)
-        for pos, col, htoks in matched
-        if len(htoks) >= 2 or not htoks.issubset(rich_tokens)
+        for pos, col, htoks, is_exact in matched
+        if is_exact or len(htoks) >= 2 or not htoks.issubset(rich_tokens)
     ]
 
     # Trier par ordre d'apparition dans la phrase et dédupliquer
@@ -236,6 +260,28 @@ def auto_plan_from_question(
             else:
                 y_col = cont[-1]
                 xs = cont[:-1]
+            # La variable temporelle est le prédicteur, et non la réponse,
+            # même lorsqu'elle est mentionnée après l'indicateur étudié (FR / EN / NL).
+            temporal_names = {"annee", "year", "jaar", "publication_year", "release_year",
+                              "hire_year", "admission_year", "date", "temps", "time", "periode", "period", "mois", "month"}
+            temporal_cols = [c for c in cont if _norm(c).replace(" ", "_") in temporal_names]
+            trend_question = bool(
+                re.search(
+                    r"evolu|evolv|tendan|chronolog|au fil|dans le temps|over time|trend|"
+                    r"chang\w*\s+(?:with|over)|with\s+year|avec\s+l.?annee|avec\s+annee|"
+                    r"door de jaren|in de tijd|verander\w*\s+(?:met|door)",
+                    c_norm,
+                )
+            )
+            if len(temporal_cols) == 1 and len(cont) == 2:
+                time_col = temporal_cols[0]
+                t_norm = _norm(time_col)
+                explicitly_predicts_time = bool(
+                    re.search(rf"(?:predi\w*|voorspel\w*|expliqu\w*)\s+{re.escape(t_norm)}", c_norm)
+                )
+                if trend_question or (y_col == time_col and not explicitly_predicts_time):
+                    y_col = next(c for c in cont if c != time_col)
+                    xs = [time_col]
             plans.append(
                 {
                     "mode": "reg" if len(xs) == 1 else "multi",

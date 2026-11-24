@@ -21,6 +21,8 @@ import pandas as pd
 import scipy
 from scipy import linalg, stats
 
+from src.scientific_guardrails import build_design_flags
+
 SEED = 74101
 BOOTSTRAP_REPS = 999
 DEFAULT_MISSING_CODES = ["", "NA", "N/A", "NULL", "NaN", "nan", "None"]
@@ -1315,6 +1317,57 @@ def run_analysis(
     else:
         raise ValueError(f"Mode statistique inconnu : {mode}")
 
+    # Ne certifier qu'un ensemble borné de métadonnées méthodologiques.
+    # Ces déclarations sont jointes à l'empreinte du plan, sans aucune ligne brute.
+    raw_design = plan.get("study_design")
+    raw_design = raw_design if isinstance(raw_design, dict) else {}
+    method = str(raw_design.get("sampling_method") or dataset_meta.get("sampling_method") or "unknown").lower()
+    allowed_methods = {
+        "unknown", "probability", "simple_random", "stratified_random",
+        "cluster_random", "systematic_random",
+        "non_probabilistic_purposive_selection", "purposive",
+        "convenience", "quota", "volunteer",
+    }
+    safe_design: dict[str, Any] = {
+        "sampling_method": method if method in allowed_methods else "unknown"
+    }
+    representative = raw_design.get("representative", dataset_meta.get("representative_of_target_population"))
+    if isinstance(representative, bool):
+        safe_design["representative"] = representative
+    cluster_col = raw_design.get("cluster_column", dataset_meta.get("cluster_column"))
+    if isinstance(cluster_col, str) and cluster_col in df.columns:
+        safe_design["cluster_column"] = cluster_col
+    time_col = raw_design.get("time_column", dataset_meta.get("time_column"))
+    if isinstance(time_col, str) and time_col in df.columns:
+        safe_design["time_column"] = time_col
+    if isinstance(raw_design.get("independence_verified"), bool):
+        safe_design["independence_verified"] = raw_design["independence_verified"]
+
+    # Garde-fous de validité externe et d'inférence, calculés en Phase 1.
+    # Seuls des diagnostics agrégés peuvent passer vers la Phase 2.
+    flags.extend(build_design_flags(df, {**plan, "study_design": safe_design}, dataset_meta))
+    if result_block.get("significant") is False:
+        flags.append({
+            "code": "non_significance_not_equivalence", "severity": "info",
+            "detail": "Un résultat non significatif ne prouve pas l'absence d'effet ; "
+                      "l'équivalence exige un seuil et un test préspécifiés.",
+        })
+    if mode in ("ind", "mw", "anova", "kw") and groups_summary:
+        sizes = [int(g["n"]) for g in groups_summary]
+        if min(sizes) < 15:
+            flags.append({
+                "code": "small_group", "severity": "warning",
+                "min_n": min(sizes),
+                "detail": "Un groupe compte moins de 15 observations complètes : "
+                          "précision et puissance potentiellement limitées.",
+            })
+        if min(sizes) > 0 and max(sizes) / min(sizes) > 2:
+            flags.append({
+                "code": "unbalanced_group_sizes", "severity": "warning",
+                "ratio": round(max(sizes) / min(sizes), 2),
+                "detail": "Effectifs par groupe déséquilibrés : vérifier la robustesse.",
+            })
+
     # Assemblage du Contrat JSON certifié (STRICTEMENT SANS DONNÉES INDIVIDUELLES)
     payload_for_hash = {
         "plan": {
@@ -1325,6 +1378,7 @@ def run_analysis(
             "alternative": alternative,
             "question": question,
             "language": language,
+            "study_design": safe_design,
         },
         "data_rows_hash": sha256_json(sub.to_dict(orient="records")),
     }
