@@ -21,15 +21,18 @@ Chaque plan envoyé à `/api/phase1/run` peut inclure :
   "study_design": {
     "sampling_method": "non_probabilistic_purposive_selection",
     "representative": false,
-    "cluster_column": "Artiste"
+    "cluster_column": "Artiste",
+    "time_column": "Annee"
   }
 }
 ```
 
-La colonne `cluster_column` doit exister dans le tableau **de Phase 1**, à défaut
-de quoi l'indépendance reste non vérifiée. Le fichier analytique du corpus musical
-ne contient pas les artistes : une jointure locale, contrôlée et conforme à la
-politique de confidentialité, serait nécessaire pour tester la dépendance par artiste.
+Les colonnes `cluster_column` et `time_column` (facultatives) doivent exister dans le
+tableau **de Phase 1** ; déclarer `time_column` permet de détecter une confusion
+temporelle même lorsque le nom de la variable temporelle n'appartient pas à la liste
+prédéfinie. Les diagnostics de dépendance et de confusion temporelle portent strictement
+sur les observations effectivement analysées (`dropna` sur les variables du plan), tandis
+que les exclusions structurelles restent mesurées sur le tableau complet.
 
 Les seules valeurs d'échantillonnage reconnues dans le sceau analytique sont
 `unknown`, `probability`, `simple_random`, `stratified_random`, `cluster_random`,

@@ -224,3 +224,73 @@ def test_agent1_no_false_mismatch_on_shared_prefix_but_preserves_legitimate_aler
         p2_miss = run_phase2_interpretation(c_miss, llm_config=None)
         joined_miss = " ".join(p2_miss["agent1_methodology_audit"])
         assert "Satisfaction_Employe" in joined_miss
+
+
+def test_temporal_group_imbalance_works_for_kw_and_mw_positive_and_negative():
+    """Les modes non paramétriques réels du moteur (kw et mw) déclenchent et n'inventent pas temporal_group_imbalance."""
+    # Positif : kw (3 groupes déséquilibrés dans le temps) et mw (2 groupes déséquilibrés)
+    df_kw_imb = pd.DataFrame({
+        "Service": ["A"] * 10 + ["B"] * 10 + ["C"] * 10,
+        "Annee": list(range(2000, 2010)) + list(range(2008, 2018)) + list(range(2015, 2025)),
+        "Score": [10.0 + i * 0.5 for i in range(30)],
+    })
+    c_kw_pos, _ = run_analysis(df_kw_imb, {"mode": "kw", "y": "Score", "xs": ["Service"], "alpha": 0.05}, {"filename": "kw.csv"})
+    assert "temporal_group_imbalance" in _codes(c_kw_pos["flags"])
+
+    df_mw_imb = df_kw_imb[df_kw_imb["Service"].isin(["A", "C"])].copy()
+    c_mw_pos, _ = run_analysis(df_mw_imb, {"mode": "mw", "y": "Score", "xs": ["Service"], "alpha": 0.05}, {"filename": "mw.csv"})
+    assert "temporal_group_imbalance" in _codes(c_mw_pos["flags"])
+
+    # Négatif : kw et mw équilibrés dans le temps -> aucune fausse alerte
+    df_kw_bal = pd.DataFrame({
+        "Service": ["A"] * 10 + ["B"] * 10 + ["C"] * 10,
+        "Annee": list(range(2015, 2025)) * 3,
+        "Score": [10.0 + (i % 5) for i in range(30)],
+    })
+    c_kw_neg, _ = run_analysis(df_kw_bal, {"mode": "kw", "y": "Score", "xs": ["Service"], "alpha": 0.05}, {"filename": "kw_bal.csv"})
+    assert "temporal_group_imbalance" not in _codes(c_kw_neg["flags"])
+
+    df_mw_bal = df_kw_bal[df_kw_bal["Service"].isin(["A", "B"])].copy()
+    c_mw_neg, _ = run_analysis(df_mw_bal, {"mode": "mw", "y": "Score", "xs": ["Service"], "alpha": 0.05}, {"filename": "mw_bal.csv"})
+    assert "temporal_group_imbalance" not in _codes(c_mw_neg["flags"])
+
+
+def test_temporal_and_cluster_diagnostics_use_only_analyzed_complete_cases():
+    """Contre-exemple de revue : 16 lignes analysées équilibrées + 40 lignes exclues (y=NaN) très biaisées -> 0 fausse alerte."""
+    analyzed = pd.DataFrame({
+        "Groupe": ["G1"] * 8 + ["G2"] * 8,
+        "Annee": list(range(2016, 2024)) * 2,
+        "Valeur": [10.0 + i * 0.4 for i in range(16)],
+        "Participant_ID": [f"p_{i}" for i in range(16)],  # tous uniques sur les lignes analysées
+    })
+    excluded = pd.DataFrame({
+        "Groupe": ["G1"] * 20 + ["G2"] * 20,
+        "Annee": [1990] * 20 + [2024] * 20,
+        "Valeur": [float("nan")] * 40,
+        "Participant_ID": ["dup_excluded"] * 40,  # répété uniquement sur les lignes exclues
+    })
+    df = pd.concat([analyzed, excluded], ignore_index=True)
+    plan = {"mode": "ind", "y": "Valeur", "xs": ["Groupe"], "alpha": 0.05,
+            "study_design": {"cluster_column": "Participant_ID"}}
+    contract, _ = run_analysis(df, plan, {"filename": "excluded_counterexample.csv"})
+    codes = _codes(contract["flags"])
+    assert contract["result"]["n_complete"] == 16
+    assert "temporal_group_imbalance" not in codes
+    assert "cluster_dependence" not in codes
+
+
+def test_explicit_time_column_in_study_design_triggers_guardrail_and_changes_seal():
+    """Déclarer study_design['time_column'] active le diagnostic sur un nom arbitraire et modifie le sceau SHA-256."""
+    df = pd.DataFrame({
+        "Centre": ["Lyon"] * 12 + ["Lille"] * 12,
+        "Vague_Inclusion": list(range(1, 13)) + list(range(13, 25)),
+        "Biomarqueur": [5.0 + i * 0.2 for i in range(24)],
+    })
+    base_plan = {"mode": "ind", "y": "Biomarqueur", "xs": ["Centre"], "alpha": 0.05}
+    meta = {"filename": "cohort.csv", "sha256_raw_file": "fixed-hash"}
+    c_without, _ = run_analysis(df, base_plan, meta)
+    c_with, _ = run_analysis(df, {**base_plan, "study_design": {"time_column": "Vague_Inclusion"}}, meta)
+
+    assert "temporal_group_imbalance" not in _codes(c_without["flags"])
+    assert "temporal_group_imbalance" in _codes(c_with["flags"])
+    assert c_without["metadata"]["sha256_analysis_json"] != c_with["metadata"]["sha256_analysis_json"]

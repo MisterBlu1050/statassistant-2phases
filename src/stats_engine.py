@@ -1337,6 +1337,9 @@ def run_analysis(
     cluster_col = raw_design.get("cluster_column", dataset_meta.get("cluster_column"))
     if isinstance(cluster_col, str) and cluster_col in df.columns:
         safe_design["cluster_column"] = cluster_col
+    time_col = raw_design.get("time_column", dataset_meta.get("time_column"))
+    if isinstance(time_col, str) and time_col in df.columns:
+        safe_design["time_column"] = time_col
     if isinstance(raw_design.get("independence_verified"), bool):
         safe_design["independence_verified"] = raw_design["independence_verified"]
 

@@ -67,38 +67,50 @@ def build_design_flags(df: pd.DataFrame, plan: dict[str, Any],
                           "count": ineligible,
                           "detail": f"{ineligible} texte(s) inéligible(s) au MATTR-100 ; exclusion structurelle et non donnée aléatoirement manquante."})
 
+    # Sous-ensemble effectivement analysé (observations complètes sur y et xs).
+    # Le tableau complet df reste utilisé pour diagnostiquer les exclusions structurelles,
+    # tandis que la dépendance et la confusion temporelle sont évaluées sur analyzed_df.
+    used_in_df = [c for c in [y_col, *x_cols] if c in df.columns]
+    analyzed_df = df.dropna(subset=used_in_df) if used_in_df else df
+    declared_time_col = design.get("time_column") or dataset_meta.get("time_column")
+    if not (isinstance(declared_time_col, str) and declared_time_col in df.columns):
+        declared_time_col = None
+
     # La présence de plusieurs observations du même auteur, patient ou sujet
     # invalide l'indépendance présumée dans de nombreux tests usuels.
     cluster_col = design.get("cluster_column") or dataset_meta.get("cluster_column")
-    if cluster_col not in df.columns:
-        cluster_col = next((c for c in df.columns if _norm_col(c) in _GROUPING_NAMES), None)
-    if cluster_col in df.columns:
-        counts = df[cluster_col].dropna().value_counts(dropna=True)
+    if cluster_col not in analyzed_df.columns:
+        cluster_col = next((c for c in analyzed_df.columns if _norm_col(c) in _GROUPING_NAMES), None)
+    if cluster_col in analyzed_df.columns:
+        counts = analyzed_df[cluster_col].dropna().value_counts(dropna=True)
         repeated_rows = int(counts[counts > 1].sum())
         if repeated_rows:
             flags.append({"code": "cluster_dependence", "severity": "warning",
                           "n_clusters": int(len(counts)), "repeated_rows": repeated_rows,
-                          "detail": f"{repeated_rows} observations relèvent de grappes répétées ({len(counts)} grappes) : tester un modèle tenant compte de cette dépendance."})
+                          "detail": f"{repeated_rows} observations analysées relèvent de grappes répétées ({len(counts)} grappes) : tester un modèle tenant compte de cette dépendance."})
     elif design.get("independence_verified") is not True:
         flags.append({"code": "independence_unverified", "severity": "info",
                       "detail": "Aucun identifiant de grappe exploitable : l'indépendance (artiste, participant, patient, site) n'a pas été vérifiée."})
 
-    # Lorsque l'année est un prédicteur, tester le changement de composition
-    # d'une variable qualitative omise à l'aide d'écarts de proportions agrégés.
-    time_cols = [c for c in x_cols if _norm_col(c) in _TEMPORAL_NAMES and c in df.columns]
+    # Lorsque l'année (ou une colonne temporelle déclarée) est un prédicteur, tester le changement
+    # de composition d'une variable qualitative omise sur les observations effectivement analysées.
+    time_cols = [
+        c for c in x_cols
+        if c in analyzed_df.columns and (_norm_col(c) in _TEMPORAL_NAMES or c == declared_time_col)
+    ]
     if time_cols and plan.get("mode") in {"reg", "multi", "quad"}:
         t_col = time_cols[0]
-        numeric_time = pd.to_numeric(df[t_col], errors="coerce")
+        numeric_time = pd.to_numeric(analyzed_df[t_col], errors="coerce")
         if numeric_time.notna().sum() >= 10 and numeric_time.nunique() >= 3:
             midpoint = numeric_time.median()
-            for col in df.columns:
+            for col in analyzed_df.columns:
                 if col in used or _norm_col(col) not in _COMPOSITION_NAMES:
                     continue
-                valid = numeric_time.notna() & df[col].notna()
-                if valid.sum() < 10 or not 2 <= df.loc[valid, col].nunique() <= 20:
+                valid = numeric_time.notna() & analyzed_df[col].notna()
+                if valid.sum() < 10 or not 2 <= analyzed_df.loc[valid, col].nunique() <= 20:
                     continue
-                early = df.loc[valid & (numeric_time <= midpoint), col].astype("string").value_counts(normalize=True)
-                late = df.loc[valid & (numeric_time > midpoint), col].astype("string").value_counts(normalize=True)
+                early = analyzed_df.loc[valid & (numeric_time <= midpoint), col].astype("string").value_counts(normalize=True)
+                late = analyzed_df.loc[valid & (numeric_time > midpoint), col].astype("string").value_counts(normalize=True)
                 categories = early.index.union(late.index)
                 tvd = 0.5 * sum(abs(float(early.get(g, 0.0)) - float(late.get(g, 0.0))) for g in categories)
                 if tvd >= 0.15:
@@ -106,21 +118,26 @@ def build_design_flags(df: pd.DataFrame, plan: dict[str, Any],
                                   "variable": str(col), "total_variation": round(tvd, 3),
                                   "detail": f"Composition de {col} différente entre périodes (distance de variation totale {tvd:.3f}) ; tendance chronologique non ajustée pour ce facteur."})
 
-    # Lors d'une comparaison de groupes (ANOVA, t-test, Kruskal, Mann-Whitney),
-    # vérifier si une colonne temporelle omise diffère entre les groupes (risque de confusion groupe x temps).
-    if plan.get("mode") in {"anova", "ind", "kruskal", "mannwhitney"} and x_cols:
+    # Lors d'une comparaison de groupes (anova, ind, kw, mw — identifiants exacts du moteur),
+    # vérifier sur les observations effectivement analysées si une colonne temporelle omise diffère entre groupes.
+    if plan.get("mode") in {"anova", "ind", "kw", "mw"} and x_cols:
         g_col = x_cols[0]
-        if g_col in df.columns:
-            for col in df.columns:
-                if col in used or _norm_col(col) not in _TEMPORAL_NAMES:
-                    continue
-                numeric_time = pd.to_numeric(df[col], errors="coerce")
-                valid = numeric_time.notna() & df[g_col].notna()
+        if g_col in analyzed_df.columns:
+            candidate_time_cols: list[str] = []
+            if declared_time_col and declared_time_col not in used:
+                candidate_time_cols.append(declared_time_col)
+            for col in analyzed_df.columns:
+                if col not in used and col not in candidate_time_cols and _norm_col(col) in _TEMPORAL_NAMES:
+                    candidate_time_cols.append(col)
+
+            for col in candidate_time_cols:
+                numeric_time = pd.to_numeric(analyzed_df[col], errors="coerce")
+                valid = numeric_time.notna() & analyzed_df[g_col].notna()
                 if valid.sum() < 10 or numeric_time[valid].nunique() < 3:
                     continue
                 grouped_times = [
                     grp.to_numpy(dtype=float)
-                    for _, grp in numeric_time[valid].groupby(df.loc[valid, g_col].astype("string"))
+                    for _, grp in numeric_time[valid].groupby(analyzed_df.loc[valid, g_col].astype("string"))
                     if len(grp) >= 3
                 ]
                 if len(grouped_times) < 2:
@@ -130,8 +147,8 @@ def build_design_flags(df: pd.DataFrame, plan: dict[str, Any],
                 except ValueError:
                     continue
                 midpoint = numeric_time[valid].median()
-                early = df.loc[valid & (numeric_time <= midpoint), g_col].astype("string").value_counts(normalize=True)
-                late = df.loc[valid & (numeric_time > midpoint), g_col].astype("string").value_counts(normalize=True)
+                early = analyzed_df.loc[valid & (numeric_time <= midpoint), g_col].astype("string").value_counts(normalize=True)
+                late = analyzed_df.loc[valid & (numeric_time > midpoint), g_col].astype("string").value_counts(normalize=True)
                 categories = early.index.union(late.index)
                 tvd = 0.5 * sum(abs(float(early.get(g, 0.0)) - float(late.get(g, 0.0))) for g in categories)
                 if kw_p < 0.05 or tvd >= 0.15:
