@@ -91,24 +91,12 @@ def _agent1_audit(contract: dict[str, Any]) -> tuple[list[str], list[dict[str, A
     actions: list[dict[str, Any]] = []
 
     # 0. Contrôle de cohérence Question <-> Variables sélectionnées
-    question_low = (plan.get("question") or "").lower()
-    if question_low:
-        generic_words = {
-            "taux", "score", "indice", "heures", "jours", "nombre", "niveau",
-            "part", "type", "avant", "apres", "moyen", "moyenne", "total", "global",
-        }
+    question_raw = plan.get("question") or ""
+    if question_raw.strip():
+        from src.scientific_guardrails import find_mentioned_unselected_columns
         selected = {plan["y"], *plan.get("xs", [])}
         all_cols = contract.get("metadata", {}).get("all_columns", [])
-        mentioned_unselected = []
-        for col in all_cols:
-            if col in selected:
-                continue
-            tokens = [
-                t for t in col.lower().replace("_", " ").split()
-                if len(t) >= 4 and t not in generic_words
-            ]
-            if col.lower() in question_low or (tokens and any(t in question_low for t in tokens)):
-                mentioned_unselected.append(col)
+        mentioned_unselected = find_mentioned_unselected_columns(question_raw, selected, all_cols)
         if mentioned_unselected:
             alerts.append(
                 f"⚠️ **Incohérence Question ↔ Variables** : votre question semble mentionner "

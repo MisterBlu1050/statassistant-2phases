@@ -9,12 +9,13 @@ import re
 from typing import Any
 
 import pandas as pd
+from scipy import stats
 
 
 _GROUPING_NAMES = {"artiste", "artist", "auteur", "author", "subject_id", "participant_id",
                    "patient_id", "employee_id", "salarie_id", "id_participant"}
-_TEMPORAL_NAMES = {"annee", "year", "publication_year", "release_year", "date", "time",
-                   "temps", "periode", "period", "mois", "month"}
+_TEMPORAL_NAMES = {"annee", "year", "jaar", "publication_year", "release_year", "hire_year",
+                   "admission_year", "date", "time", "temps", "periode", "period", "mois", "month"}
 _COMPOSITION_NAMES = {"genre", "genre_musical", "site", "departement", "department",
                       "pole", "segment", "sector", "secteur", "type_contrat", "contract_type"}
 _LEXICAL_PATTERN = re.compile(r"mattr|mtld|lexic|mots?_uniques?|vocabulaire|"
@@ -104,6 +105,50 @@ def build_design_flags(df: pd.DataFrame, plan: dict[str, Any],
                     flags.append({"code": "temporal_composition_shift", "severity": "warning",
                                   "variable": str(col), "total_variation": round(tvd, 3),
                                   "detail": f"Composition de {col} différente entre périodes (distance de variation totale {tvd:.3f}) ; tendance chronologique non ajustée pour ce facteur."})
+
+    # Lors d'une comparaison de groupes (ANOVA, t-test, Kruskal, Mann-Whitney),
+    # vérifier si une colonne temporelle omise diffère entre les groupes (risque de confusion groupe x temps).
+    if plan.get("mode") in {"anova", "ind", "kruskal", "mannwhitney"} and x_cols:
+        g_col = x_cols[0]
+        if g_col in df.columns:
+            for col in df.columns:
+                if col in used or _norm_col(col) not in _TEMPORAL_NAMES:
+                    continue
+                numeric_time = pd.to_numeric(df[col], errors="coerce")
+                valid = numeric_time.notna() & df[g_col].notna()
+                if valid.sum() < 10 or numeric_time[valid].nunique() < 3:
+                    continue
+                grouped_times = [
+                    grp.to_numpy(dtype=float)
+                    for _, grp in numeric_time[valid].groupby(df.loc[valid, g_col].astype("string"))
+                    if len(grp) >= 3
+                ]
+                if len(grouped_times) < 2:
+                    continue
+                try:
+                    kw_stat, kw_p = stats.kruskal(*grouped_times)
+                except ValueError:
+                    continue
+                midpoint = numeric_time[valid].median()
+                early = df.loc[valid & (numeric_time <= midpoint), g_col].astype("string").value_counts(normalize=True)
+                late = df.loc[valid & (numeric_time > midpoint), g_col].astype("string").value_counts(normalize=True)
+                categories = early.index.union(late.index)
+                tvd = 0.5 * sum(abs(float(early.get(g, 0.0)) - float(late.get(g, 0.0))) for g in categories)
+                if kw_p < 0.05 or tvd >= 0.15:
+                    flags.append({
+                        "code": "temporal_group_imbalance",
+                        "severity": "warning",
+                        "time_variable": str(col),
+                        "group_variable": str(g_col),
+                        "kruskal_stat": round(float(kw_stat), 3),
+                        "kruskal_p": round(float(kw_p), 4),
+                        "total_variation": round(tvd, 3),
+                        "detail": (
+                            f"Distribution temporelle ({col}) déséquilibrée entre les groupes de {g_col} "
+                            f"(Kruskal-Wallis p = {kw_p:.4f}, TVD = {tvd:.3f}) ; risque de confusion groupe × temps — "
+                            f"envisager une analyse ajustée pour {col}."
+                        ),
+                    })
     return flags
 
 
@@ -130,6 +175,10 @@ def render_scientific_warnings(contract: dict[str, Any], language: str = "fr") -
             "La composition des groupes évolue dans le temps : une tendance brute peut être confondue.",
             "Groepssamenstelling verandert doorheen de tijd: ruwe trends kunnen vertekend zijn.",
             "Group composition changes over time: unadjusted trends may be confounded."),
+        "temporal_group_imbalance": (
+            "Distribution temporelle déséquilibrée entre les groupes : risque de confusion groupe × temps ; envisager une analyse ajustée.",
+            "Ongelijke tijdsverdeling tussen groepen: risico op verstrengeling groep × tijd; overweeg een gecorrigeerde analyse.",
+            "Temporal distribution differs across groups: risk of group × time confounding; consider a time-adjusted analysis."),
         "structural_mattr_missing": (
             "MATTR-100 : exclusions structurelles de textes trop courts ; analyser la sélection.",
             "MATTR-100: structurele uitsluiting van te korte teksten; controleer selectie.",
@@ -160,3 +209,76 @@ def render_scientific_warnings(contract: dict[str, Any], language: str = "fr") -
     # Une réserve structurée, ajoutée aux deux rapports déterministes.
     caveat = " ".join(translations[key][lang_idx] for key in ordered)
     return alerts, caveat
+
+
+def find_mentioned_unselected_columns(
+    question: str,
+    selected_cols: set[str],
+    all_columns: list[str],
+) -> list[str]:
+    """Détecte les colonnes explicitement mentionnées dans la question mais absentes du modèle.
+
+    Masque d'abord les correspondances exactes des colonnes déjà sélectionnées afin d'éviter
+    les faux positifs par collision de préfixe/sous-token (ex: MATTR_100 vs MATTR_50).
+    """
+    import unicodedata
+    q_clean = unicodedata.normalize("NFKD", str(question).lower())
+    q_id = "".join(ch for ch in q_clean if not unicodedata.combining(ch))
+    if not q_id.strip():
+        return []
+
+    generic_words = {
+        "taux", "score", "indice", "heures", "jours", "nombre", "niveau",
+        "part", "type", "avant", "apres", "moyen", "moyenne", "total", "global",
+        "rate", "hours", "days", "level", "mean", "average", "uren", "dagen", "aantal",
+    }
+
+    # 1. Masquer dans la question toutes les mentions exactes des colonnes sélectionnées
+    masked_id = q_id
+    selected_tokens: set[str] = set()
+    exact_selected_hits = 0
+    for scol in sorted(selected_cols, key=len, reverse=True):
+        sn = _norm_col(scol)
+        if not sn:
+            continue
+        if re.search(rf"(?<![a-z0-9_]){re.escape(sn)}(?![a-z0-9_])", masked_id):
+            exact_selected_hits += 1
+            masked_id = re.sub(rf"(?<![a-z0-9_]){re.escape(sn)}(?![a-z0-9_])", " ", masked_id)
+        for tok in re.split(r"[_\s-]+", sn):
+            if len(tok) >= 4:
+                selected_tokens.add(tok)
+
+    masked_words = masked_id.replace("_", " ")
+    # Si la question cite déjà explicitement les identifiants exacts des colonnes sélectionnées,
+    # exiger une correspondance exacte (ou tous les tokens significatifs) pour les autres colonnes.
+    strict_identifier_mode = exact_selected_hits >= len(selected_cols) and exact_selected_hits > 0
+
+    mentioned: list[str] = []
+    for col in all_columns:
+        if col in selected_cols:
+            continue
+        cn = _norm_col(col)
+        if not cn:
+            continue
+        # Correspondance exacte d'identifiant sur le texte masqué
+        if re.search(rf"(?<![a-z0-9_]){re.escape(cn)}(?![a-z0-9_])", masked_id):
+            mentioned.append(col)
+            continue
+
+        # Correspondance partielle par tokens significatifs non génériques et non couverts par une colonne sélectionnée
+        sig_tokens = [
+            t for t in re.split(r"[_\s-]+", cn)
+            if len(t) >= 4 and t not in generic_words and t not in selected_tokens
+        ]
+        if not sig_tokens:
+            continue
+        hits = [t for t in sig_tokens if re.search(rf"\b{re.escape(t)}\w*", masked_words)]
+        all_sig = [t for t in re.split(r"[_\s-]+", cn) if len(t) >= 4 and t not in generic_words]
+        if strict_identifier_mode:
+            if len(hits) == len(all_sig) and len(all_sig) >= 2:
+                mentioned.append(col)
+        else:
+            min_needed = 2 if len(all_sig) >= 3 else 1
+            if len(hits) >= min_needed:
+                mentioned.append(col)
+    return mentioned

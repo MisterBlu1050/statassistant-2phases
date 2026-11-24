@@ -134,3 +134,93 @@ def test_methodology_changes_are_included_in_analysis_hash():
     assert unknown["metadata"]["sha256_analysis_json"] != purposive["metadata"]["sha256_analysis_json"]
     assert purposive["plan"]["study_design"]["representative"] is False
     assert "nonrepresentative_sampling" in _codes(purposive["flags"])
+
+
+def test_anova_temporal_group_imbalance_generalizes_to_hr_and_clinical_data():
+    """Le garde-fou temporal_group_imbalance fonctionne sur tout domaine (RH, clinique, etc.) sans fuite de lignes."""
+    hr_df = pd.DataFrame({
+        "Departement": ["Legacy_IT"] * 12 + ["Operations"] * 12 + ["AI_Lab"] * 12,
+        "Hire_Year": list(range(2005, 2017)) + list(range(2011, 2023)) + list(range(2019, 2025)) * 2,
+        "Salaire_EUR": [50000 + i * 300 for i in range(36)],
+    })
+    plan = {"mode": "anova", "y": "Salaire_EUR", "xs": ["Departement"], "alpha": 0.05, "language": "en",
+            "question": "Does Salaire_EUR differ across Departement?"}
+    contract, _ = run_analysis(hr_df, plan, {"filename": "hr.csv"})
+    codes = _codes(contract["flags"])
+    assert "temporal_group_imbalance" in codes
+    # Aucune ligne brute dans les flags
+    assert all("50000" not in str(f) for f in contract["flags"])
+    for lang in ("fr", "nl", "en"):
+        alerts, caveat = render_scientific_warnings(contract, lang)
+        assert any("temporal_group_imbalance" in a for a in alerts)
+        assert caveat
+
+
+def test_temporal_group_imbalance_absent_when_groups_are_temporally_balanced():
+    """Contrôle négatif : aucune fausse alerte quand les années sont équilibrées entre groupes."""
+    balanced = pd.DataFrame({
+        "Site": ["Nord"] * 12 + ["Sud"] * 12 + ["Est"] * 12,
+        "Annee": list(range(2013, 2025)) * 3,
+        "Duree_Sejour": [4.0 + (i % 5) * 0.5 for i in range(36)],
+    })
+    plan = {"mode": "anova", "y": "Duree_Sejour", "xs": ["Site"], "alpha": 0.05, "language": "fr"}
+    contract, _ = run_analysis(balanced, plan, {"filename": "clinical.csv"})
+    assert "temporal_group_imbalance" not in _codes(contract["flags"])
+
+
+def test_auto_planner_exact_column_priority_and_trilingual_temporal_orientation():
+    """Les noms exacts priment sur les sous-tokens (MATTR_100 != MATTR_50) et le temps reste prédicteur (FR/EN/NL)."""
+    df = pd.DataFrame({
+        "Genre_Musical": ["Rap", "Pop", "Rock"] * 10,
+        "Annee": [1995 + i for i in range(30)],
+        "Jaar": [1995 + i for i in range(30)],
+        "MATTR_50": [60.0 + i * 0.2 for i in range(30)],
+        "MATTR_100": [55.0 + i * 0.2 for i in range(30)],
+        "Richesse_Lexicale_MTLD": [40.0 + i * 0.5 for i in range(30)],
+    })
+    col_types = infer_column_types(df)
+
+    p1 = auto_plan_from_question("Does MATTR_100 differ across Genre_Musical?", df, col_types, language="en")
+    assert len(p1) == 1 and p1[0]["mode"] == "anova" and p1[0]["y"] == "MATTR_100" and p1[0]["xs"] == ["Genre_Musical"]
+
+    p2 = auto_plan_from_question("Does Annee predict MATTR_50?", df, col_types, language="en")
+    assert len(p2) == 1 and p2[0]["mode"] == "reg" and p2[0]["y"] == "MATTR_50" and p2[0]["xs"] == ["Annee"]
+
+    p3 = auto_plan_from_question("Does Richesse_Lexicale_MTLD evolve with Annee?", df, col_types, language="en")
+    assert len(p3) == 1 and p3[0]["mode"] == "reg" and p3[0]["y"] == "Richesse_Lexicale_MTLD" and p3[0]["xs"] == ["Annee"]
+
+    p4 = auto_plan_from_question("La diversité lexicale MATTR_50 évolue-t-elle avec Annee ?", df, col_types, language="fr")
+    assert len(p4) == 1 and p4[0]["mode"] == "reg" and p4[0]["y"] == "MATTR_50" and p4[0]["xs"] == ["Annee"]
+
+    p5 = auto_plan_from_question("Verandert MATTR_50 met Jaar?", df, col_types, language="nl")
+    assert len(p5) == 1 and p5[0]["mode"] == "reg" and p5[0]["y"] == "MATTR_50" and p5[0]["xs"] == ["Jaar"]
+
+
+def test_agent1_no_false_mismatch_on_shared_prefix_but_preserves_legitimate_alerts():
+    """Agent 1 ne génère plus de fausse alerte sur préfixe commun mais conserve les vrais oublis (FR/NL/EN)."""
+    from src.phase2_agents import run_phase2_interpretation
+
+    df = _lexical_frame()
+    df["MATTR_100"] = df["MATTR_50"] - 4.0
+    df["Eligible_MATTR_100"] = "Oui"
+    df["Satisfaction_Employe"] = [3.5 + (i % 4) * 0.2 for i in range(len(df))]
+    for lang in ("fr", "nl", "en"):
+        # Cas 1 : aucune fausse alerte MATTR_50 / Eligible_MATTR_100 quand MATTR_100 est sélectionné
+        plan_ok = {
+            "mode": "anova", "y": "MATTR_100", "xs": ["Genre_Musical"], "alpha": 0.05, "language": lang,
+            "question": "Does MATTR_100 differ across Genre_Musical?",
+        }
+        c_ok, _ = run_analysis(df, plan_ok, {"filename": "pilot.csv"})
+        p2_ok = run_phase2_interpretation(c_ok, llm_config=None)
+        joined_ok = " ".join(p2_ok["agent1_methodology_audit"])
+        assert "MATTR_50" not in joined_ok and "Eligible_MATTR_100" not in joined_ok
+
+        # Cas 2 : vraie alerte conservée quand une variable réellement citée (Satisfaction_Employe) est omise
+        plan_miss = {
+            "mode": "anova", "y": "MATTR_100", "xs": ["Genre_Musical"], "alpha": 0.05, "language": lang,
+            "question": "Does Satisfaction_Employe differ across Genre_Musical?",
+        }
+        c_miss, _ = run_analysis(df, plan_miss, {"filename": "pilot.csv"})
+        p2_miss = run_phase2_interpretation(c_miss, llm_config=None)
+        joined_miss = " ".join(p2_miss["agent1_methodology_audit"])
+        assert "Satisfaction_Employe" in joined_miss

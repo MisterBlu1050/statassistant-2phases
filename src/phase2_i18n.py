@@ -48,17 +48,13 @@ def _audit_nl_en(contract: dict[str, Any], lang: str) -> tuple[list[str], list[d
     actions: list[dict[str, Any]] = []
 
     # 0. Question <-> Variables coherence
-    q_low = (plan.get("question") or "").lower()
-    if q_low:
-        generic = {"taux", "score", "indice", "heures", "jours", "nombre", "niveau", "rate", "hours", "days", "uren", "dagen", "aantal"}
+    q_raw = plan.get("question") or ""
+    if q_raw.strip():
+        from src.scientific_guardrails import find_mentioned_unselected_columns
         sel = {plan["y"], *plan.get("xs", [])}
-        missed = []
-        for col in contract.get("metadata", {}).get("all_columns", []):
-            if col in sel:
-                continue
-            toks = [t for t in col.lower().replace("_", " ").split() if len(t) >= 4 and t not in generic]
-            if col.lower() in q_low or (toks and any(t in q_low for t in toks)):
-                missed.append(col)
+        missed = find_mentioned_unselected_columns(
+            q_raw, sel, contract.get("metadata", {}).get("all_columns", [])
+        )
         if missed:
             alerts.append(
                 (f"⚠️ **Vraag ↔ Variabelen mismatch**: uw vraag lijkt **{', '.join(missed)}** te noemen, maar deze kolom zit niet in het model."
