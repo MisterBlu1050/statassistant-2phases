@@ -21,6 +21,8 @@ import pandas as pd
 import scipy
 from scipy import linalg, stats
 
+from src.scientific_guardrails import build_design_flags
+
 SEED = 74101
 BOOTSTRAP_REPS = 999
 DEFAULT_MISSING_CODES = ["", "NA", "N/A", "NULL", "NaN", "nan", "None"]
@@ -1314,6 +1316,31 @@ def run_analysis(
         plot_data.update({"cond_cols": cond_cols, "matrix": mat.tolist()})
     else:
         raise ValueError(f"Mode statistique inconnu : {mode}")
+
+    # Garde-fous de validité externe et d'inférence, calculés en Phase 1.
+    # Seuls des diagnostics agrégés peuvent passer vers la Phase 2.
+    flags.extend(build_design_flags(df, plan, dataset_meta))
+    if result_block.get("significant") is False:
+        flags.append({
+            "code": "non_significance_not_equivalence", "severity": "info",
+            "detail": "Un résultat non significatif ne prouve pas l'absence d'effet ; "
+                      "l'équivalence exige un seuil et un test préspécifiés.",
+        })
+    if mode in ("ind", "mw", "anova", "kw") and groups_summary:
+        sizes = [int(g["n"]) for g in groups_summary]
+        if min(sizes) < 15:
+            flags.append({
+                "code": "small_group", "severity": "warning",
+                "min_n": min(sizes),
+                "detail": "Un groupe compte moins de 15 observations complètes : "
+                          "précision et puissance potentiellement limitées.",
+            })
+        if min(sizes) > 0 and max(sizes) / min(sizes) > 2:
+            flags.append({
+                "code": "unbalanced_group_sizes", "severity": "warning",
+                "ratio": round(max(sizes) / min(sizes), 2),
+                "detail": "Effectifs par groupe déséquilibrés : vérifier la robustesse.",
+            })
 
     # Assemblage du Contrat JSON certifié (STRICTEMENT SANS DONNÉES INDIVIDUELLES)
     payload_for_hash = {
