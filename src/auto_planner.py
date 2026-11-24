@@ -241,7 +241,8 @@ def auto_plan_from_question(
             temporal_names = {"annee", "year", "publication_year", "release_year",
                               "date", "temps", "time", "periode", "period", "mois", "month"}
             temporal_cols = [c for c in cont if _norm(c).replace(" ", "_") in temporal_names]
-            if len(temporal_cols) == 1 and len(cont) == 2:
+            trend_question = bool(re.search(r"evolu|tendan|chronolog|au fil|dans le temps|over time|trend|door de jaren|in de tijd", c_norm))
+            if trend_question and len(temporal_cols) == 1 and len(cont) == 2:
                 time_col = temporal_cols[0]
                 y_col = next(c for c in cont if c != time_col)
                 xs = [time_col]
