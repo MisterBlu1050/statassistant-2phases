@@ -139,6 +139,9 @@ def main() -> int:
 
     out = {
         "seed": SEED_V2,
+        "null_calibration_type1_error": run_paired_top50_power(
+            df_top50, n_total=2000, delta_39=0.0, icc=ICC_REML, n_sim=2000, seed=SEED_V2 + 100
+        ),
         "paired_scenarios": [
             run_paired_top50_power(df_top50, n_total=2000, delta_39=3.0, icc=ICC_REML, n_sim=2000, seed=SEED_V2),
             run_paired_top50_power(df_top50, n_total=2000, delta_39=3.0, icc=0.30, n_sim=1000, seed=SEED_V2 + 1),

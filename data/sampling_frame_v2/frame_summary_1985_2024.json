@@ -1,18 +1,18 @@
 {
   "version": "1.4",
   "source": "lescharts.com (SNEP weekly singles archive, 1985-2024)",
-  "total_weeks_compiled": 2121,
-  "weeks_with_http_200": 2121,
+  "total_weeks_compiled": 2085,
+  "weeks_with_http_200": 2085,
   "weeks_with_missing_top50_ranks": 6,
-  "total_distinct_works_all_languages": 20809,
-  "total_distinct_top50_works_all_languages": 10299,
+  "total_distinct_works_all_languages": 20806,
+  "total_distinct_top50_works_all_languages": 10296,
   "top50_works_shifted_block_by_First_Top50_Week": 65,
-  "total_distinct_artists": 9135,
+  "total_distinct_artists": 9133,
   "mean_works_per_artist": 2.278,
   "pilot_manifest_total": 131,
-  "pilot_works_matched_in_frame": 100,
+  "pilot_works_matched_in_frame": 112,
   "works_by_block_all_languages": {
-    "1985-1989": 941,
+    "1985-1989": 938,
     "1990-1994": 1045,
     "1995-1999": 1455,
     "2000-2004": 2024,
@@ -22,7 +22,7 @@
     "2020-2024": 5273
   },
   "works_top50_by_First_Top50_Block_all_languages": {
-    "1985-1989": 941,
+    "1985-1989": 938,
     "1990-1994": 1045,
     "1995-1999": 1121,
     "2000-2004": 1241,
@@ -32,9 +32,9 @@
     "2020-2024": 1989
   },
   "sha256": {
-    "pilot_manifest_131.csv": "240af2081ae2911488e4979449889768e0422645f72940f7fe57d65032847044",
-    "weeks_inventory_1985_2024.csv": "1ead136b19fd4f695f401226acfea6d4db9bf0e92f8238309dfec57ad8ab7ef8",
-    "sampling_frame_works_1985_2024.csv": "8210ccd1d2534410781fdf055b3f9464939635ec94f1abd8ad9cc48c36f3e277",
-    "pilot_matching_audit.csv": "2ec87229b242c0845f2dcb3d61abdf628b64f5139aec095683219c167a206242"
+    "pilot_crosswalk_131.csv": "e2d174833d5a9a350aa95325de82b617cd23ad11aefc041705ceefd540c65190",
+    "weeks_inventory_1985_2024.csv": "c8a34373915eac2a429c810f868c57591d1dfb09f2fce51dc872a58b4e505bed",
+    "sampling_frame_works_1985_2024.csv": "668a448dac68299cc5431868d21f983f3dfb5904de8d857b1de070a5efc2f115",
+    "pilot_matching_audit.csv": "db8969363c2a2b587cf301f042b798f21314916e253856243c62db3f3f2aa1b1"
   }
 }

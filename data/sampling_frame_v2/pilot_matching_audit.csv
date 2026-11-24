@@ -14,13 +14,13 @@ LRCLIB_ID,Genre_Musical,Annee,Artiste,Titre,Matched_In_Frame,Matched_Work_Slug
 24777,Rap,2003,Sniper,Gravé dans la roche,Oui,/chanson/sniper/grave-dans-la-roche-5601
 4873539,Rap,2002,Booba,Destinée,Oui,/chanson/booba/destinee-216787
 5438164,Rap,2003,Diam's,DJ,Oui,/chanson/diam-s/dj-5752
-4890109,Rap,2006,Diam's,La Boulette,Non,
+4890109,Rap,2006,Diam's,La Boulette,Oui,/chanson/diam-s/la-boulette-generation-nan-nan-188394
 4870195,Rap,2006,Booba,Boulbi,Non,
 5440157,Rap,2008,Kery James,Banlieusards,Non,
 3204727,Rap,2009,Orelsan,Changement,Non,
 8020891,Rap,2010,Sexion d'Assaut,Désolé,Oui,/chanson/sexion-d-assaut/desole-692447
 2422124,Rap,2011,Orelsan,La terre est ronde,Oui,/chanson/orelsan/la-terre-est-ronde-908243
-4886297,Rap,2012,Youssoupha,Dreamin',Non,
+4886297,Rap,2012,Youssoupha,Dreamin',Oui,/chanson/youssoupha-feat-indila-skalpovitch/dreamin-971067
 7800207,Rap,2013,Maître Gims,Bella,Oui,/chanson/maitre-gims/bella-1142326
 6172107,Rap,2015,Jul,Wesh alors,Oui,/chanson/jul/wesh-alors-1513075
 4675142,Rap,2015,Nekfeu,On verra,Oui,/chanson/nekfeu/on-verra-1425913
@@ -35,7 +35,7 @@ LRCLIB_ID,Genre_Musical,Annee,Artiste,Titre,Matched_In_Frame,Matched_Work_Slug
 7800168,Rap,2019,PNL,Au DD,Oui,/chanson/pnl/au-dd-1853401
 7800990,Rap,2019,Ninho,Lettre à une femme,Oui,/chanson/ninho/lettre-a-une-femme-1965833
 2486648,Rap,2020,Freeze Corleone,Freeze Raël,Oui,/chanson/freeze-corleone/freeze-rael-2075874
-31732022,Rap,2020,Jul,Bande organisée,Non,
+31732022,Rap,2020,Jul,Bande organisée,Oui,/chanson/sch-kofs-jul-naps-soso-maness-elams-solda-houari/bande-organisee-2055263
 1214556,Rap,2021,Orelsan,L'odeur de l'essence,Oui,/chanson/orelsan/l-odeur-de-l-essence-2234116
 2422522,Rap,2021,SCH,Marché noir,Oui,/chanson/sch/marche-noir-2151156
 1061981,Rap,2022,Gazo,DIE,Oui,/chanson/gazo/die-2288921
@@ -60,8 +60,8 @@ LRCLIB_ID,Genre_Musical,Annee,Artiste,Titre,Matched_In_Frame,Matched_Work_Slug
 5475225,Variete_Pop,1997,Florent Pagny,Savoir aimer,Oui,/chanson/florent-pagny/savoir-aimer-13162
 13866014,Variete_Pop,1998,Alain Bashung,La nuit je mens,Oui,/chanson/alain-bashung/la-nuit-je-mens-212631
 5474591,Variete_Pop,2001,Zazie,Rue de la Paix,Oui,/chanson/zazie/rue-de-la-paix-80123
-1213331,Variete_Pop,2002,Renaud,Manhattan-Kaboul,Non,
-30457359,Variete_Pop,2004,Calogero,Face à la mer,Non,
+1213331,Variete_Pop,2002,Renaud,Manhattan-Kaboul,Oui,/chanson/renaud-axelle-red/manhattan-kaboul-5379
+30457359,Variete_Pop,2004,Calogero,Face à la mer,Oui,/chanson/calogero-passi/face-a-la-mer-6190
 5466667,Variete_Pop,2006,Olivia Ruiz,La Femme chocolat,Oui,/chanson/olivia-ruiz/la-femme-chocolat-161225
 4895106,Variete_Pop,2007,Christophe Maé,On s'attache,Oui,/chanson/christophe-mae/on-s-attache-300946
 4803023,Variete_Pop,2008,Grégoire,Toi + Moi,Oui,/chanson/gregoire/toi-moi-518223
@@ -74,12 +74,12 @@ LRCLIB_ID,Genre_Musical,Annee,Artiste,Titre,Matched_In_Frame,Matched_Work_Slug
 5699090,Variete_Pop,2014,Louane,Avenir,Oui,/chanson/louane/avenir-1364082
 6188308,Variete_Pop,2015,Vianney,Pas là,Oui,/chanson/vianney/pas-la-1359651
 3026335,Variete_Pop,2016,Julien Doré,Le Lac,Oui,/chanson/julien-dore/le-lac-1568497
-4809072,Variete_Pop,2018,Angèle,Tout oublier,Non,
+4809072,Variete_Pop,2018,Angèle,Tout oublier,Oui,/chanson/angele-feat-romeo-elvis/tout-oublier-1800635
 8335058,Variete_Pop,2018,Angèle,Balance ton quoi,Oui,/chanson/angele/balance-ton-quoi-1800634
 7125478,Variete_Pop,2018,Aya Nakamura,Djadja,Oui,/chanson/aya-nakamura/djadja-1753636
 4890144,Variete_Pop,2018,Clara Luciani,La Grenade,Oui,/chanson/clara-luciani/la-grenade-1732317
 9240839,Variete_Pop,2019,Pomme,Anxiété,Non,
-8094750,Variete_Pop,2020,Grand Corps Malade,Mais je t'aime,Non,
+8094750,Variete_Pop,2020,Grand Corps Malade,Mais je t'aime,Oui,/chanson/grand-corps-malade-camille-lellouche/mais-je-t-aime-2027094
 5467076,Variete_Pop,2021,Juliette Armanet,Le dernier jour du disco,Oui,/chanson/juliette-armanet/le-dernier-jour-du-disco-2219626
 30056031,Variete_Pop,2021,Clara Luciani,Respire encore,Oui,/chanson/clara-luciani/respire-encore-2194933
 5347527,Variete_Pop,2022,Stromae,L'enfer,Oui,/chanson/stromae/l-enfer-2243750
@@ -93,8 +93,8 @@ LRCLIB_ID,Genre_Musical,Annee,Artiste,Titre,Matched_In_Frame,Matched_Work_Slug
 5113884,Rock_Electro,1982,Téléphone,Cendrillon,Non,
 7670561,Rock_Electro,1982,Indochine,L'Aventurier,Oui,/chanson/indochine/l-aventurier-102590
 7383069,Rock_Electro,1984,Téléphone,Un autre monde,Oui,/chanson/telephone/un-autre-monde-267131
-4801937,Rock_Electro,1985,Indochine,3ème sexe,Non,
-5441104,Rock_Electro,1984,Les Rita Mitsouko,Marcia Baïla,Non,
+4801937,Rock_Electro,1985,Indochine,3ème sexe,Oui,/chanson/indochine/3e-sexe-168214
+5441104,Rock_Electro,1984,Les Rita Mitsouko,Marcia Baïla,Oui,/chanson/rita-mitsouko/marcia-baila-21816
 3025399,Rock_Electro,1986,Niagara,L'Amour à la plage,Oui,/chanson/niagara/l-amour-a-la-plage-170613
 7708010,Rock_Electro,1982,Téléphone,Ça (c'est vraiment toi),Oui,/chanson/telephone/ca-c-est-vraiment-toi-299658
 5823577,Rock_Electro,1989,Noir Désir,Aux sombres héros de l'amer,Oui,/chanson/noir-desir/aux-sombres-heros-de-l-amer-28940
@@ -107,9 +107,9 @@ LRCLIB_ID,Genre_Musical,Annee,Artiste,Titre,Matched_In_Frame,Matched_Work_Slug
 7232839,Rock_Electro,1999,Saez,Jeune et con,Oui,/chanson/saez/jeune-et-con-254287
 13866025,Rock_Electro,2001,Noir Désir,Le vent nous portera,Oui,/chanson/noir-desir/le-vent-nous-portera-103674
 7670538,Rock_Electro,2002,Indochine,J'ai demandé à la lune,Oui,/chanson/indochine/j-ai-demande-a-la-lune-5246
-2488433,Rock_Electro,2003,Kyo,Le Chemin,Non,
+2488433,Rock_Electro,2003,Kyo,Le Chemin,Oui,/chanson/kyo-feat-sita/le-chemin-5430
 13866304,Rock_Electro,2003,Mickey 3D,Respire,Oui,/chanson/mickey-3d/respire-5558
-4081193,Rock_Electro,2003,-M-,Qui de nous deux,Non,
+4081193,Rock_Electro,2003,-M-,Qui de nous deux,Oui,/chanson/m-fr/qui-de-nous-deux-5961
 3935309,Rock_Electro,2004,Luke,La Sentinelle,Non,
 5447832,Rock_Electro,2006,Superbus,Butterfly,Oui,/chanson/superbus/butterfly-283613
 7934351,Rock_Electro,2007,BB Brunes,Dis-moi,Oui,/chanson/bb-brunes/dis-moi-380196
@@ -121,7 +121,7 @@ LRCLIB_ID,Genre_Musical,Annee,Artiste,Titre,Matched_In_Frame,Matched_Work_Slug
 6303688,Rock_Electro,2014,Feu! Chatterton,La Malinche,Oui,/chanson/feu-chatterton/la-malinche-1329420
 33108545,Rock_Electro,2016,Paradis,Toi et moi,Oui,/chanson/paradis/toi-et-moi-1530826
 10709360,Rock_Electro,2017,Indochine,La vie est belle,Oui,/chanson/indochine/la-vie-est-belle-1668059
-32282519,Rock_Electro,2017,Therapie Taxi,Hit Sale,Non,
+32282519,Rock_Electro,2017,Therapie Taxi,Hit Sale,Oui,/chanson/therapie-taxi-feat-romeo-elvis/hit-sale-1717900
 6867950,Rock_Electro,2018,Eddy de Pretto,Fête de trop,Oui,/chanson/eddy-de-pretto/fete-de-trop-1702537
 2420325,Rock_Electro,2015,Odezenne,Bouche à lèvres,Non,
 3898463,Rock_Electro,2015,L'Impératrice,Agitations tropicales,Non,

@@ -1,0 +1,132 @@
+LRCLIB_ID,Genre_Musical,Annee,Artiste,Titre,Match_Status,Matched_Work_Slug,Audit_Note
+2484997,Rap,1991,MC Solaar,Bouge de là,MATCH_CONFIRMED_EXACT,/chanson/mc-solaar/bouge-de-la-29885,Correspondance exacte normalisée
+7441709,Rap,1991,MC Solaar,Caroline,MATCH_CONFIRMED_EXACT,/chanson/mc-solaar/caroline-50882,Correspondance exacte normalisée
+2489605,Rap,1994,MC Solaar,Nouveau Western,MATCH_CONFIRMED_EXACT,/chanson/mc-solaar/nouveau-western-268809,Correspondance exacte normalisée
+7232790,Rap,1993,IAM,Je danse le Mia,MATCH_CONFIRMED_EXACT,/chanson/iam/je-danse-le-mia-71582,Correspondance exacte normalisée
+5218907,Rap,1997,IAM,Petit Frère,MATCH_CONFIRMED_EXACT,/chanson/iam/petit-frere-71591,Correspondance exacte normalisée
+7133206,Rap,1997,IAM,Demain c'est loin,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+30299964,Rap,1998,Suprême NTM,Laisse pas traîner ton fils,MATCH_CONFIRMED_EXACT,/chanson/supreme-ntm/laisse-pas-trainer-ton-fils-256568,Correspondance exacte normalisée
+2422470,Rap,1998,Suprême NTM,Ma Benz,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+2422062,Rap,1998,Oxmo Puccino,L'enfant seul,MATCH_CONFIRMED_EXACT,/chanson/oxmo-puccino/l-enfant-seul-256872,Correspondance exacte normalisée
+3972305,Rap,1996,Doc Gynéco,Nirvana,MATCH_CONFIRMED_EXACT,/chanson/doc-gyneco/nirvana-226536,Correspondance exacte normalisée
+6598086,Rap,1999,113,Tonton du Bled,MATCH_CONFIRMED_EXACT,/chanson/113/tonton-du-bled-83629,Correspondance exacte normalisée
+5107704,Rap,2001,Fonky Family,Art de rue,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+24777,Rap,2003,Sniper,Gravé dans la roche,MATCH_CONFIRMED_EXACT,/chanson/sniper/grave-dans-la-roche-5601,Correspondance exacte normalisée
+4873539,Rap,2002,Booba,Destinée,MATCH_CONFIRMED_EXACT,/chanson/booba/destinee-216787,Correspondance exacte normalisée
+5438164,Rap,2003,Diam's,DJ,MATCH_CONFIRMED_EXACT,/chanson/diam-s/dj-5752,Correspondance exacte normalisée
+4890109,Rap,2006,Diam's,La Boulette,MATCH_CONFIRMED_ALIAS,/chanson/diam-s/la-boulette-generation-nan-nan-188394,Titre étendu (Génération nan nan)
+4870195,Rap,2006,Booba,Boulbi,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+5440157,Rap,2008,Kery James,Banlieusards,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+3204727,Rap,2009,Orelsan,Changement,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+8020891,Rap,2010,Sexion d'Assaut,Désolé,MATCH_CONFIRMED_EXACT,/chanson/sexion-d-assaut/desole-692447,Correspondance exacte normalisée
+2422124,Rap,2011,Orelsan,La terre est ronde,MATCH_CONFIRMED_EXACT,/chanson/orelsan/la-terre-est-ronde-908243,Correspondance exacte normalisée
+4886297,Rap,2012,Youssoupha,Dreamin',MATCH_CONFIRMED_ALIAS,/chanson/youssoupha-feat-indila-skalpovitch/dreamin-971067,Crédit feat. Indila & Skalpovitch
+7800207,Rap,2013,Maître Gims,Bella,MATCH_CONFIRMED_EXACT,/chanson/maitre-gims/bella-1142326,Correspondance exacte normalisée
+6172107,Rap,2015,Jul,Wesh alors,MATCH_CONFIRMED_EXACT,/chanson/jul/wesh-alors-1513075,Correspondance exacte normalisée
+4675142,Rap,2015,Nekfeu,On verra,MATCH_CONFIRMED_EXACT,/chanson/nekfeu/on-verra-1425913,Correspondance exacte normalisée
+2488456,Rap,2015,PNL,Le monde ou rien,MATCH_CONFIRMED_EXACT,/chanson/pnl/le-monde-ou-rien-1489670,Correspondance exacte normalisée
+2485673,Rap,2016,PNL,DA,MATCH_CONFIRMED_EXACT,/chanson/pnl/da-1592238,Correspondance exacte normalisée
+2485058,Rap,2016,Damso,BruxellesVie,MATCH_CONFIRMED_EXACT,/chanson/damso/bruxellesvie-1556676,Correspondance exacte normalisée
+7105005,Rap,2017,Orelsan,Basique,MATCH_CONFIRMED_EXACT,/chanson/orelsan/basique-1695442,Correspondance exacte normalisée
+6065913,Rap,2017,Niska,Réseaux,MATCH_CONFIRMED_EXACT,/chanson/niska/reseaux-1676421,Correspondance exacte normalisée
+6521812,Rap,2017,Damso,Macarena,MATCH_CONFIRMED_EXACT,/chanson/damso/macarena-1659574,Correspondance exacte normalisée
+4675634,Rap,2017,Lomepal,Yeux disent,MATCH_CONFIRMED_EXACT,/chanson/lomepal/yeux-disent-1672432,Correspondance exacte normalisée
+8328354,Rap,2017,Bigflo & Oli,Dommage,MATCH_CONFIRMED_EXACT,/chanson/bigflo-oli/dommage-1672508,Correspondance exacte normalisée
+7800168,Rap,2019,PNL,Au DD,MATCH_CONFIRMED_EXACT,/chanson/pnl/au-dd-1853401,Correspondance exacte normalisée
+7800990,Rap,2019,Ninho,Lettre à une femme,MATCH_CONFIRMED_EXACT,/chanson/ninho/lettre-a-une-femme-1965833,Correspondance exacte normalisée
+2486648,Rap,2020,Freeze Corleone,Freeze Raël,MATCH_CONFIRMED_EXACT,/chanson/freeze-corleone/freeze-rael-2075874,Correspondance exacte normalisée
+31732022,Rap,2020,Jul,Bande organisée,MATCH_CONFIRMED_ALIAS,/chanson/sch-kofs-jul-naps-soso-maness-elams-solda-houari/bande-organisee-2055263,Crédit collectif 13 Organisé
+1214556,Rap,2021,Orelsan,L'odeur de l'essence,MATCH_CONFIRMED_EXACT,/chanson/orelsan/l-odeur-de-l-essence-2234116,Correspondance exacte normalisée
+2422522,Rap,2021,SCH,Marché noir,MATCH_CONFIRMED_EXACT,/chanson/sch/marche-noir-2151156,Correspondance exacte normalisée
+1061981,Rap,2022,Gazo,DIE,MATCH_CONFIRMED_EXACT,/chanson/gazo/die-2288921,Correspondance exacte normalisée
+5900460,Rap,2022,Tiakola,Meuda,MATCH_CONFIRMED_EXACT,/chanson/tiakola/meuda-2281311,Correspondance exacte normalisée
+984559,Rap,2017,Luidji,Foufoune Palace,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+5745272,Rap,2023,Werenoi,Laboratoire,MATCH_CONFIRMED_EXACT,/chanson/werenoi/laboratoire-2358219,Correspondance exacte normalisée
+8168893,Rap,2022,SDM,Bolide allemand,MATCH_CONFIRMED_EXACT,/chanson/sdm/bolide-allemand-2330618,Correspondance exacte normalisée
+5311215,Rap,2024,PLK,Demain,MATCH_CONFIRMED_EXACT,/chanson/plk/demain-2365451,Correspondance exacte normalisée
+17570807,Variete_Pop,1980,France Gall,Il jouait du piano debout,MATCH_CONFIRMED_EXACT,/chanson/france-gall/il-jouait-du-piano-debout-17438,Correspondance exacte normalisée
+4418054,Variete_Pop,1981,Jean-Jacques Goldman,Il suffira d'un signe,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+7707550,Variete_Pop,1982,Jean-Jacques Goldman,Quand la musique est bonne,MATCH_CONFIRMED_EXACT,/chanson/jean-jacques-goldman/quand-la-musique-est-bonne-30963,Correspondance exacte normalisée
+7345677,Variete_Pop,1983,Renaud,Morgane de toi,MATCH_CONFIRMED_EXACT,/chanson/renaud/morgane-de-toi-187069,Correspondance exacte normalisée
+7345657,Variete_Pop,1985,Renaud,Mistral gagnant,MATCH_CONFIRMED_EXACT,/chanson/renaud/mistral-gagnant-72829,Correspondance exacte normalisée
+7233335,Variete_Pop,1985,Daniel Balavoine,L'Aziza,MATCH_CONFIRMED_EXACT,/chanson/daniel-balavoine/l-aziza-37996,Correspondance exacte normalisée
+3026990,Variete_Pop,1986,Mylène Farmer,Libertine,MATCH_CONFIRMED_EXACT,/chanson/mylene-farmer/libertine-29838,Correspondance exacte normalisée
+7472931,Variete_Pop,1987,France Gall,"Ella, elle l'a",MATCH_CONFIRMED_EXACT,/chanson/france-gall/ella-elle-l-a-1742,Correspondance exacte normalisée
+4393310,Variete_Pop,1987,Mylène Farmer,Sans contrefaçon,MATCH_CONFIRMED_EXACT,/chanson/mylene-farmer/sans-contrefacon-13670,Correspondance exacte normalisée
+4387248,Variete_Pop,1989,Patrick Bruel,Casser la voix,MATCH_CONFIRMED_EXACT,/chanson/patrick-bruel/casser-la-voix-63684,Correspondance exacte normalisée
+26141156,Variete_Pop,1991,Mylène Farmer,Désenchantée,MATCH_CONFIRMED_EXACT,/chanson/mylene-farmer/desenchantee-2381,Correspondance exacte normalisée
+7659290,Variete_Pop,1994,Francis Cabrel,La Corrida,MATCH_CONFIRMED_EXACT,/chanson/francis-cabrel/la-corrida-119553,Correspondance exacte normalisée
+7190408,Variete_Pop,1995,Céline Dion,Pour que tu m'aimes encore,MATCH_CONFIRMED_EXACT,/chanson/celine-dion/pour-que-tu-m-aimes-encore-3078,Correspondance exacte normalisée
+5475225,Variete_Pop,1997,Florent Pagny,Savoir aimer,MATCH_CONFIRMED_EXACT,/chanson/florent-pagny/savoir-aimer-13162,Correspondance exacte normalisée
+13866014,Variete_Pop,1998,Alain Bashung,La nuit je mens,MATCH_CONFIRMED_EXACT,/chanson/alain-bashung/la-nuit-je-mens-212631,Correspondance exacte normalisée
+5474591,Variete_Pop,2001,Zazie,Rue de la Paix,MATCH_CONFIRMED_EXACT,/chanson/zazie/rue-de-la-paix-80123,Correspondance exacte normalisée
+1213331,Variete_Pop,2002,Renaud,Manhattan-Kaboul,MATCH_CONFIRMED_ALIAS,/chanson/renaud-axelle-red/manhattan-kaboul-5379,Duo Renaud & Axelle Red
+30457359,Variete_Pop,2004,Calogero,Face à la mer,MATCH_CONFIRMED_ALIAS,/chanson/calogero-passi/face-a-la-mer-6190,Duo Calogero & Passi
+5466667,Variete_Pop,2006,Olivia Ruiz,La Femme chocolat,MATCH_CONFIRMED_EXACT,/chanson/olivia-ruiz/la-femme-chocolat-161225,Correspondance exacte normalisée
+4895106,Variete_Pop,2007,Christophe Maé,On s'attache,MATCH_CONFIRMED_EXACT,/chanson/christophe-mae/on-s-attache-300946,Correspondance exacte normalisée
+4803023,Variete_Pop,2008,Grégoire,Toi + Moi,MATCH_CONFIRMED_EXACT,/chanson/gregoire/toi-moi-518223,Correspondance exacte normalisée
+8278874,Variete_Pop,2009,Stromae,Alors on danse,MATCH_CONFIRMED_EXACT,/chanson/stromae/alors-on-danse-604548,Correspondance exacte normalisée
+13865993,Variete_Pop,2010,Zaz,Je veux,MATCH_CONFIRMED_EXACT,/chanson/zaz/je-veux-692208,Correspondance exacte normalisée
+7750552,Variete_Pop,2013,Stromae,Papaoutai,MATCH_CONFIRMED_EXACT,/chanson/stromae/papaoutai-1142159,Correspondance exacte normalisée
+8127422,Variete_Pop,2013,Stromae,Formidable,MATCH_CONFIRMED_EXACT,/chanson/stromae/formidable-1152170,Correspondance exacte normalisée
+13865691,Variete_Pop,2014,Indila,Dernière danse,MATCH_CONFIRMED_EXACT,/chanson/indila/derniere-danse-1216653,Correspondance exacte normalisée
+4421121,Variete_Pop,2014,Christine and the Queens,Christine,MATCH_CONFIRMED_EXACT,/chanson/christine-and-the-queens/christine-1299169,Correspondance exacte normalisée
+5699090,Variete_Pop,2014,Louane,Avenir,MATCH_CONFIRMED_EXACT,/chanson/louane/avenir-1364082,Correspondance exacte normalisée
+6188308,Variete_Pop,2015,Vianney,Pas là,MATCH_CONFIRMED_EXACT,/chanson/vianney/pas-la-1359651,Correspondance exacte normalisée
+3026335,Variete_Pop,2016,Julien Doré,Le Lac,MATCH_CONFIRMED_EXACT,/chanson/julien-dore/le-lac-1568497,Correspondance exacte normalisée
+4809072,Variete_Pop,2018,Angèle,Tout oublier,MATCH_CONFIRMED_ALIAS,/chanson/angele-feat-romeo-elvis/tout-oublier-1800635,Crédit feat. Roméo Elvis
+8335058,Variete_Pop,2018,Angèle,Balance ton quoi,MATCH_CONFIRMED_EXACT,/chanson/angele/balance-ton-quoi-1800634,Correspondance exacte normalisée
+7125478,Variete_Pop,2018,Aya Nakamura,Djadja,MATCH_CONFIRMED_EXACT,/chanson/aya-nakamura/djadja-1753636,Correspondance exacte normalisée
+4890144,Variete_Pop,2018,Clara Luciani,La Grenade,MATCH_CONFIRMED_EXACT,/chanson/clara-luciani/la-grenade-1732317,Correspondance exacte normalisée
+9240839,Variete_Pop,2019,Pomme,Anxiété,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+8094750,Variete_Pop,2020,Grand Corps Malade,Mais je t'aime,MATCH_CONFIRMED_ALIAS,/chanson/grand-corps-malade-camille-lellouche/mais-je-t-aime-2027094,Duo Grand Corps Malade & Camille Lellouche
+5467076,Variete_Pop,2021,Juliette Armanet,Le dernier jour du disco,MATCH_CONFIRMED_EXACT,/chanson/juliette-armanet/le-dernier-jour-du-disco-2219626,Correspondance exacte normalisée
+30056031,Variete_Pop,2021,Clara Luciani,Respire encore,MATCH_CONFIRMED_EXACT,/chanson/clara-luciani/respire-encore-2194933,Correspondance exacte normalisée
+5347527,Variete_Pop,2022,Stromae,L'enfer,MATCH_CONFIRMED_EXACT,/chanson/stromae/l-enfer-2243750,Correspondance exacte normalisée
+7905110,Variete_Pop,2023,Zaho de Sagazan,La symphonie des éclairs,MATCH_CONFIRMED_EXACT,/chanson/zaho-de-sagazan/la-symphonie-des-eclairs-2361112,Correspondance exacte normalisée
+8246972,Variete_Pop,2023,Slimane,Mon amour,MATCH_CONFIRMED_EXACT,/chanson/slimane/mon-amour-2409577,Correspondance exacte normalisée
+7239943,Variete_Pop,2022,Santa,Popcorn salé,MATCH_CONFIRMED_EXACT,/chanson/santa/popcorn-sale-2394446,Correspondance exacte normalisée
+8280398,Variete_Pop,2024,Pierre Garnier,Ceux qu'on était,MATCH_CONFIRMED_EXACT,/chanson/pierre-garnier/ceux-qu-on-etait-2427641,Correspondance exacte normalisée
+9323393,Variete_Pop,2024,Santa,Recommence-moi,MATCH_CONFIRMED_EXACT,/chanson/santa/recommence-moi-2445174,Correspondance exacte normalisée
+7381021,Rock_Electro,1980,Téléphone,Argent trop cher,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+7200926,Rock_Electro,1980,Trust,Antisocial,MATCH_CONFIRMED_EXACT,/chanson/trust/antisocial-266185,Correspondance exacte normalisée
+5113884,Rock_Electro,1982,Téléphone,Cendrillon,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+7670561,Rock_Electro,1982,Indochine,L'Aventurier,MATCH_CONFIRMED_EXACT,/chanson/indochine/l-aventurier-102590,Correspondance exacte normalisée
+7383069,Rock_Electro,1984,Téléphone,Un autre monde,MATCH_CONFIRMED_EXACT,/chanson/telephone/un-autre-monde-267131,Correspondance exacte normalisée
+4801937,Rock_Electro,1985,Indochine,3ème sexe,MATCH_CONFIRMED_ALIAS,/chanson/indochine/3e-sexe-168214,Variante typographique (3e sexe vs 3ème sexe)
+5441104,Rock_Electro,1984,Les Rita Mitsouko,Marcia Baïla,MATCH_CONFIRMED_ALIAS,/chanson/rita-mitsouko/marcia-baila-21816,Variante sans article (Rita Mitsouko)
+3025399,Rock_Electro,1986,Niagara,L'Amour à la plage,MATCH_CONFIRMED_EXACT,/chanson/niagara/l-amour-a-la-plage-170613,Correspondance exacte normalisée
+7708010,Rock_Electro,1982,Téléphone,Ça (c'est vraiment toi),MATCH_CONFIRMED_EXACT,/chanson/telephone/ca-c-est-vraiment-toi-299658,Correspondance exacte normalisée
+5823577,Rock_Electro,1989,Noir Désir,Aux sombres héros de l'amer,MATCH_CONFIRMED_EXACT,/chanson/noir-desir/aux-sombres-heros-de-l-amer-28940,Correspondance exacte normalisée
+3057186,Rock_Electro,1992,Noir Désir,Tostaky,MATCH_CONFIRMED_EXACT,/chanson/noir-desir/tostaky-267481,Correspondance exacte normalisée
+5844959,Rock_Electro,1996,Noir Désir,Un jour en France,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+27564083,Rock_Electro,1997,Louise Attaque,J't'emmène au vent,MATCH_CONFIRMED_EXACT,/chanson/louise-attaque/j-t-emmene-au-vent-555442,Correspondance exacte normalisée
+29292071,Rock_Electro,1997,Louise Attaque,Ton invitation,MATCH_CONFIRMED_EXACT,/chanson/louise-attaque/ton-invitation-252126,Correspondance exacte normalisée
+3026048,Rock_Electro,1998,Matmatah,Lambé An Dro,MATCH_CONFIRMED_EXACT,/chanson/matmatah/lambe-an-dro-255356,Correspondance exacte normalisée
+5334072,Rock_Electro,1998,Tryo,L'hymne de nos campagnes,MATCH_CONFIRMED_EXACT,/chanson/tryo/l-hymne-de-nos-campagnes-157717,Correspondance exacte normalisée
+7232839,Rock_Electro,1999,Saez,Jeune et con,MATCH_CONFIRMED_EXACT,/chanson/saez/jeune-et-con-254287,Correspondance exacte normalisée
+13866025,Rock_Electro,2001,Noir Désir,Le vent nous portera,MATCH_CONFIRMED_EXACT,/chanson/noir-desir/le-vent-nous-portera-103674,Correspondance exacte normalisée
+7670538,Rock_Electro,2002,Indochine,J'ai demandé à la lune,MATCH_CONFIRMED_EXACT,/chanson/indochine/j-ai-demande-a-la-lune-5246,Correspondance exacte normalisée
+2488433,Rock_Electro,2003,Kyo,Le Chemin,MATCH_CONFIRMED_ALIAS,/chanson/kyo-feat-sita/le-chemin-5430,Crédit feat. Sita
+13866304,Rock_Electro,2003,Mickey 3D,Respire,MATCH_CONFIRMED_EXACT,/chanson/mickey-3d/respire-5558,Correspondance exacte normalisée
+4081193,Rock_Electro,2003,-M-,Qui de nous deux,MATCH_CONFIRMED_ALIAS,/chanson/m-fr/qui-de-nous-deux-5961,Variante crédit M [FR]
+3935309,Rock_Electro,2004,Luke,La Sentinelle,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+5447832,Rock_Electro,2006,Superbus,Butterfly,MATCH_CONFIRMED_EXACT,/chanson/superbus/butterfly-283613,Correspondance exacte normalisée
+7934351,Rock_Electro,2007,BB Brunes,Dis-moi,MATCH_CONFIRMED_EXACT,/chanson/bb-brunes/dis-moi-380196,Correspondance exacte normalisée
+5439340,Rock_Electro,2008,Indochine,Little Dolls,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+7233342,Rock_Electro,1996,Noir Désir,L'homme pressé,MATCH_CONFIRMED_EXACT,/chanson/noir-desir/l-homme-presse-235667,Correspondance exacte normalisée
+2485598,Rock_Electro,2012,BB Brunes,Coups et blessures,MATCH_CONFIRMED_EXACT,/chanson/bb-brunes/coups-et-blessures-1041120,Correspondance exacte normalisée
+9030556,Rock_Electro,2013,Fauve,Blizzard,MATCH_CONFIRMED_EXACT,/chanson/fauve/blizzard-1154490,Correspondance exacte normalisée
+5776722,Rock_Electro,2013,La Femme,Sur la planche,MATCH_CONFIRMED_EXACT,/chanson/la-femme/sur-la-planche-1039100,Correspondance exacte normalisée
+6303688,Rock_Electro,2014,Feu! Chatterton,La Malinche,MATCH_CONFIRMED_EXACT,/chanson/feu-chatterton/la-malinche-1329420,Correspondance exacte normalisée
+33108545,Rock_Electro,2016,Paradis,Toi et moi,MATCH_CONFIRMED_EXACT,/chanson/paradis/toi-et-moi-1530826,Correspondance exacte normalisée
+10709360,Rock_Electro,2017,Indochine,La vie est belle,MATCH_CONFIRMED_EXACT,/chanson/indochine/la-vie-est-belle-1668059,Correspondance exacte normalisée
+32282519,Rock_Electro,2017,Therapie Taxi,Hit Sale,MATCH_CONFIRMED_ALIAS,/chanson/therapie-taxi-feat-romeo-elvis/hit-sale-1717900,Crédit feat. Roméo Elvis
+6867950,Rock_Electro,2018,Eddy de Pretto,Fête de trop,MATCH_CONFIRMED_EXACT,/chanson/eddy-de-pretto/fete-de-trop-1702537,Correspondance exacte normalisée
+2420325,Rock_Electro,2015,Odezenne,Bouche à lèvres,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+3898463,Rock_Electro,2015,L'Impératrice,Agitations tropicales,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+3835431,Rock_Electro,2021,Feu! Chatterton,Monde nouveau,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+5709045,Rock_Electro,2021,La Femme,Paradigme,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+7126648,Rock_Electro,2020,Indochine,Nos célébrations,MATCH_CONFIRMED_EXACT,/chanson/indochine/nos-celebrations-2011641,Correspondance exacte normalisée
+3952660,Rock_Electro,2023,Shaka Ponk,Tout le monde danse,ABSENT_CONFIRMED,,Non classé dans le Top Singles hebdomadaire 1985-2024 (ou antérieur à 1985 / titre album)
+23230414,Rock_Electro,2024,Indochine,Le chant des cygnes,MATCH_CONFIRMED_EXACT,/chanson/indochine/le-chant-des-cygnes-2460609,Correspondance exacte normalisée

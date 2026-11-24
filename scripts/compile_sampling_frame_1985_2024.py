@@ -40,6 +40,7 @@ ROW_RE = re.compile(
     re.S,
 )
 NAV_RE = re.compile(r'href="/singles/(\d{4}-\d{2}-\d{2})"')
+CANON_RE = re.compile(r'<link\s+rel="canonical"\s+href="https://lescharts\.com/singles/(\d{4}-\d{2}-\d{2})"')
 
 
 def block_5y(year: int) -> str:
@@ -80,7 +81,10 @@ def find_first_week_of_year(year: int) -> str | None:
         cand = (d + timedelta(days=offset)).isoformat()
         status, raw = fetch_week(cand)
         if status == 200 and len(ROW_RE.findall(raw)) >= 20:
-            return cand
+            m = CANON_RE.search(raw)
+            canon = m.group(1) if m else cand
+            if canon.startswith(f"{year}-"):
+                return canon
         time.sleep(0.05)
     return None
 
@@ -138,9 +142,13 @@ def main() -> int:
     out_dir = repo_root / "data" / "sampling_frame_v2"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    pilot_manifest_path = out_dir / "pilot_manifest_131.csv"
-    pilot_rows = load_versioned_pilot_manifest(pilot_manifest_path)
-    pilot_key_to_id = {(norm_key(r["Artiste"]), norm_key(r["Titre"])): int(r["LRCLIB_ID"]) for r in pilot_rows}
+    pilot_crosswalk_path = out_dir / "pilot_crosswalk_131.csv"
+    pilot_rows = load_versioned_pilot_manifest(pilot_crosswalk_path)
+    slug_to_pilot_id = {
+        r["Matched_Work_Slug"].strip(): int(r["LRCLIB_ID"])
+        for r in pilot_rows
+        if r.get("Matched_Work_Slug", "").strip()
+    }
 
     all_weeks: list[dict[str, Any]] = []
     all_entries: list[tuple[str, int, str, str, str, str]] = []
@@ -188,8 +196,7 @@ def main() -> int:
     matched_pilot_ids: dict[int, str] = {}
     works_rows = []
     for rec in sorted(works.values(), key=lambda r: (r["First_Week"], r["Best_Rank"], r["Work_Slug"])):
-        pkey = (norm_key(rec["Artist"]), norm_key(rec["Title"]))
-        pid = pilot_key_to_id.get(pkey)
+        pid = slug_to_pilot_id.get(rec["Work_Slug"])
         if pid is not None:
             matched_pilot_ids[pid] = rec["Work_Slug"]
         t50_block = block_5y(int(rec["First_Top50_Year"])) if rec["First_Top50_Year"] != "" else ""
@@ -264,7 +271,7 @@ def main() -> int:
         "works_by_block_all_languages": works_by_block,
         "works_top50_by_First_Top50_Block_all_languages": top50_by_top50_block,
         "sha256": {
-            "pilot_manifest_131.csv": hashlib.sha256(pilot_manifest_path.read_bytes()).hexdigest(),
+            "pilot_crosswalk_131.csv": hashlib.sha256(pilot_crosswalk_path.read_bytes()).hexdigest(),
             "weeks_inventory_1985_2024.csv": hashlib.sha256(weeks_csv.read_bytes()).hexdigest(),
             "sampling_frame_works_1985_2024.csv": hashlib.sha256(works_csv.read_bytes()).hexdigest(),
             "pilot_matching_audit.csv": hashlib.sha256(pilot_audit_csv.read_bytes()).hexdigest(),
