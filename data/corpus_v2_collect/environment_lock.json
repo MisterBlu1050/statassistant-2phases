@@ -1,0 +1,16 @@
+{
+  "locked_utc": "2026-11-24T10:06:02Z",
+  "python": "3.11.9",
+  "simplemma": "2.0.0",
+  "lingua_language_detector": "2.1.1",
+  "tokenizer_regex": "[A-Za-zÀ-ÖØ-öø-ÿŒœŸ]+(?:'[A-Za-zÀ-ÖØ-öø-ÿŒœŸ]+)?",
+  "mtld_threshold": 0.72,
+  "language_triage_thresholds": {
+    "auto_include_french_min_conf": 0.85,
+    "auto_exclude_non_french_max_conf": 0.25,
+    "grey_zone_pending_human_review": [
+      0.25,
+      0.85
+    ]
+  }
+}
