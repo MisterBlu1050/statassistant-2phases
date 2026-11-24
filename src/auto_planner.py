@@ -236,6 +236,15 @@ def auto_plan_from_question(
             else:
                 y_col = cont[-1]
                 xs = cont[:-1]
+            # La variable temporelle est le prédicteur, et non la réponse,
+            # même lorsqu'elle est mentionnée après l'indicateur étudié.
+            temporal_names = {"annee", "year", "publication_year", "release_year",
+                              "date", "temps", "time", "periode", "period", "mois", "month"}
+            temporal_cols = [c for c in cont if _norm(c).replace(" ", "_") in temporal_names]
+            if len(temporal_cols) == 1 and len(cont) == 2:
+                time_col = temporal_cols[0]
+                y_col = next(c for c in cont if c != time_col)
+                xs = [time_col]
             plans.append(
                 {
                     "mode": "reg" if len(xs) == 1 else "multi",
