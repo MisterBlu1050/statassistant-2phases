@@ -1,0 +1,68 @@
+{
+  "freeze_verification": {
+    "freeze_type": "github_release_annotated_tag",
+    "repo": "MisterBlu1050/statassistant-2phases",
+    "tag": "protocol-v1.4-freeze",
+    "release_url": "https://github.com/MisterBlu1050/statassistant-2phases/releases/tag/protocol-v1.4-freeze",
+    "published_at_utc": "2026-11-24T09:58:25Z",
+    "frozen_protocol_asset": {
+      "asset_name": "protocole_preenregistre_v2_4.md",
+      "download_url": "https://github.com/MisterBlu1050/statassistant-2phases/releases/download/protocol-v1.4-freeze/protocole_preenregistre_v2_4.md",
+      "downloaded_sha256": "4b51d09f104d68046dac6b93e31569b9453e09e5efc30e02ef41cc9b8744438e",
+      "exact_byte_identity": true
+    }
+  },
+  "drawn_utc": "2026-11-24T09:59:23Z",
+  "seed": 20261124,
+  "protocol_file": "docs/protocole_preenregistre_v2_4.md",
+  "protocol_sha256": "4b51d09f104d68046dac6b93e31569b9453e09e5efc30e02ef41cc9b8744438e",
+  "sampling_frame_file": "data/sampling_frame_v2/sampling_frame_works_1985_2024.csv",
+  "sampling_frame_sha256": "668a448dac68299cc5431868d21f983f3dfb5904de8d857b1de070a5efc2f115",
+  "target_per_stratum": 250,
+  "strata_summary": {
+    "1985-1989": {
+      "candidates_non_pilot_all_languages": 928,
+      "target_exploitable": 250,
+      "excluded_pilot_top50": 10
+    },
+    "1990-1994": {
+      "candidates_non_pilot_all_languages": 1037,
+      "target_exploitable": 250,
+      "excluded_pilot_top50": 8
+    },
+    "1995-1999": {
+      "candidates_non_pilot_all_languages": 1112,
+      "target_exploitable": 250,
+      "excluded_pilot_top50": 9
+    },
+    "2000-2004": {
+      "candidates_non_pilot_all_languages": 1228,
+      "target_exploitable": 250,
+      "excluded_pilot_top50": 13
+    },
+    "2005-2009": {
+      "candidates_non_pilot_all_languages": 1155,
+      "target_exploitable": 250,
+      "excluded_pilot_top50": 5
+    },
+    "2010-2014": {
+      "candidates_non_pilot_all_languages": 1095,
+      "target_exploitable": 250,
+      "excluded_pilot_top50": 10
+    },
+    "2015-2019": {
+      "candidates_non_pilot_all_languages": 1678,
+      "target_exploitable": 250,
+      "excluded_pilot_top50": 19
+    },
+    "2020-2024": {
+      "candidates_non_pilot_all_languages": 1967,
+      "target_exploitable": 250,
+      "excluded_pilot_top50": 22
+    }
+  },
+  "sha256_outputs": {
+    "stratified_candidate_order_v2.csv": "dbe027644b62b39e513e6455d02424efb19f17a1e9e89f0b529a611bbee6d4e1",
+    "excluded_pilot_top50.csv": "3c1535c0c38c935894dc690c9e3a1e13c762280f4e88e28faf41e305f3759017"
+  }
+}
