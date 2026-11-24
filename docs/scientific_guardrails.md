@@ -43,7 +43,7 @@ Les seules valeurs d'échantillonnage reconnues dans le sceau analytique sont
 - `lexical_scope_only` : les indicateurs MATTR/MTLD sont lexicaux, non linguistiques au sens global.
 - `non_significance_not_equivalence` : un résultat non significatif n'établit pas l'équivalence.
 - `structural_mattr_missing` : les textes trop courts exclus de MATTR-100 sont explicitement comptés.
-- `temporal_composition_shift` : changement significatif de composition descriptive entre
+- `temporal_composition_shift` : changement descriptif marqué de composition entre
   périodes (distance de variation totale >= 0,15), sans prétendre démontrer une causalité.
 
 **Important :** ces alertes ne réparent ni le biais de sélection du corpus, ni
