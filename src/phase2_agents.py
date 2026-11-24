@@ -646,7 +646,11 @@ def _optional_llm_enrichment(
         "Tu es un comité de 3 experts statistiques (Auditeur méthodologique, Rédacteur APA 7, Consultant métier). "
         "Tu reçois UNIQUEMENT un contrat JSON agrégé certifié (aucune donnée individuelle). "
         "Ne modifie JAMAIS un chiffre du JSON. Rédige en français une synthèse exécutive claire, "
-        "les limites méthodologiques (VIF, non-linéarité, outliers, causalité) et des recommandations concrètes."
+        "les limites méthodologiques (VIF, non-linéarité, outliers, causalité) et des recommandations concrètes. "
+        "Un résultat non significatif ne démontre jamais l'absence d'effet. "
+        "Aucune généralisation n'est autorisée sans plan de sondage documenté ; "
+        "une métrique lexicale ne démontre pas la qualité globale d'une langue. "
+        "Les avertissements déterministes des flags du contrat prévalent sur tout verdict rédigé."
     )
     user_content = json.dumps(contract, ensure_ascii=False)
 
@@ -710,22 +714,28 @@ def run_phase2_interpretation(
         }
 
     scientific_alerts, caveat = render_scientific_warnings(contract, lang)
+    headings = {
+        "fr": ("Limites d'interprétation", "Réserves scientifiques", "Limites méthodologiques vérifiées"),
+        "nl": ("Interpretatiebeperkingen", "Wetenschappelijke voorbehouden", "Geverifieerde methodologische beperkingen"),
+        "en": ("Interpretation limitations", "Scientific caveats", "Verified methodological limits"),
+    }
+    apa_heading, summary_heading, llm_heading = headings.get(lang, headings["fr"])
     if scientific_alerts:
         output["agent1_methodology_audit"] = [
             *output.get("agent1_methodology_audit", []), *scientific_alerts
         ]
         output["agent2_apa7_report"] = (
-            output.get("agent2_apa7_report", "") + "\n\n**Limites d'interprétation :** " + caveat
+            output.get("agent2_apa7_report", "") + "\n\n**{apa_heading} :** " + caveat
         )
         output["agent3_business_summary"] = (
-            output.get("agent3_business_summary", "") + "\n\n**Réserves scientifiques :** " + caveat
+            output.get("agent3_business_summary", "") + "\n\n**{summary_heading} :** " + caveat
         )
 
     if llm_config and llm_config.get("enabled"):
         try:
             output = _optional_llm_enrichment(contract, output, llm_config)
             if caveat and output.get("llm_commentary"):
-                output["llm_commentary"] += "\n\n**Limites méthodologiques vérifiées :** " + caveat
+                output["llm_commentary"] += "\n\n**{llm_heading} :** " + caveat
         except Exception as exc:
             output["llm_error"] = f"LLM unavailable ({exc}) — fallback to local expert engine."
 
