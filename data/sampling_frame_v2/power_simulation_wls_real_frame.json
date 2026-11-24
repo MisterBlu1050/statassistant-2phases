@@ -1,0 +1,102 @@
+{
+  "seed": 20261124,
+  "week_gaps_gt_7d": [
+    {
+      "from": "1993-09-04",
+      "to": "1993-09-18",
+      "days": 14
+    },
+    {
+      "from": "2005-02-27",
+      "to": "2005-03-12",
+      "days": 13
+    },
+    {
+      "from": "2012-10-27",
+      "to": "2012-11-10",
+      "days": 14
+    }
+  ],
+  "scenarios": [
+    {
+      "label": "Cadre complet (Top 50->200) | Tirage egal 250/bloc | WLS pondere CR1",
+      "allocation": "equal_250",
+      "N": 2000,
+      "delta_39": 3.0,
+      "icc_true": 0.3703,
+      "n_sim": 2000,
+      "kish_weight_deff": 1.414,
+      "mean_artist_clusters": 1459.1,
+      "mean_songs_per_artist": 1.371,
+      "power_wls_cr1": 0.691,
+      "wilson_95_ci": [
+        0.6704,
+        0.7109
+      ]
+    },
+    {
+      "label": "Cadre harmonise Top 50 constant | Tirage egal 250/bloc | WLS pondere CR1",
+      "allocation": "equal_250",
+      "N": 2000,
+      "delta_39": 3.0,
+      "icc_true": 0.3703,
+      "n_sim": 2000,
+      "kish_weight_deff": 1.065,
+      "mean_artist_clusters": 1388.4,
+      "mean_songs_per_artist": 1.441,
+      "power_wls_cr1": 0.71,
+      "wilson_95_ci": [
+        0.6897,
+        0.7295
+      ]
+    },
+    {
+      "label": "Cadre complet (Top 50->200) | Tirage proportionnel a N_h | WLS pondere CR1",
+      "allocation": "proportional",
+      "N": 2000,
+      "delta_39": 3.0,
+      "icc_true": 0.3703,
+      "n_sim": 2000,
+      "kish_weight_deff": 1.0,
+      "mean_artist_clusters": 1407.4,
+      "mean_songs_per_artist": 1.421,
+      "power_wls_cr1": 0.6985,
+      "wilson_95_ci": [
+        0.678,
+        0.7182
+      ]
+    },
+    {
+      "label": "Cadre harmonise Top 50 constant | Tirage proportionnel a N_h | WLS pondere CR1",
+      "allocation": "proportional",
+      "N": 2000,
+      "delta_39": 3.0,
+      "icc_true": 0.3703,
+      "n_sim": 2000,
+      "kish_weight_deff": 1.0,
+      "mean_artist_clusters": 1373.9,
+      "mean_songs_per_artist": 1.456,
+      "power_wls_cr1": 0.729,
+      "wilson_95_ci": [
+        0.7091,
+        0.748
+      ]
+    },
+    {
+      "label": "Cadre complet | Tirage egal 250/bloc | WLS pondere CR1 | N=2800",
+      "allocation": "equal_250",
+      "N": 2800,
+      "delta_39": 3.0,
+      "icc_true": 0.3703,
+      "n_sim": 1000,
+      "kish_weight_deff": 1.414,
+      "mean_artist_clusters": 1908.4,
+      "mean_songs_per_artist": 1.467,
+      "power_wls_cr1": 0.799,
+      "wilson_95_ci": [
+        0.773,
+        0.8227
+      ]
+    }
+  ]
+}

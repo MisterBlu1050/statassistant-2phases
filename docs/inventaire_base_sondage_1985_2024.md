@@ -1,44 +1,50 @@
-# Inventaire Vérifiable de la Base de Sondage Hebdomadaire (1985–2024)
+# Inventaire Exhaustif de la Base de Sondage Hebdomadaire (1985–2024)
 
-- **Statut** : Inventaire préalable **sans tirage aléatoire** (Livrable 2 — Phase A)
-- **Date d'audit** : 24 novembre 2026
-- **Source vérifiée** : Archives hebdomadaires officielles des singles en France (SNEP / Hung Medien, `https://lescharts.com/singles/YYYY-MM-DD`)
-- **Preuve machine-readable** : `docs/sampling_frame_inventory_1985_2024.json` (générée par `scripts/inventory_sampling_frame.py`)
-
----
-
-## 1. Couverture annuelle et profondeur exacte de classement (40 / 40 années)
-
-Le sondage d'une semaine représentative (début juillet) pour chacune des **40 années civiles de 1985 à 2024** confirme une **couverture de 40 / 40 années (0 année manquante)**, avec **3 régimes historiques de profondeur** clairement identifiés :
-
-| Régime de profondeur | Période exacte vérifiée | Nombre d'années | Entrées classées / semaine | Remarque méthodologique |
-| :--- | :--- | :---: | :---: | :--- |
-| **Top 50** | **1985 – 1997** | 13 ans | 50 *(51 en 1985)* | Période historique du Top 50 ventes physiques |
-| **Top 100** | **1998 – 2011** | 14 ans | 100 *(99 en 2007)* | Doublement de profondeur + intégration des téléchargements |
-| **Top 200** | **2012 – 2024** | 13 ans | 200 *(199 en 2012)* | Quadruplement de profondeur + intégration du streaming (et règle SNEP juillet 2024) |
-| **Total** | **1985 – 2024** | **40 ans** | **50 → 200** | **0 année manquante** |
-
-> [!IMPORTANT]
-> Ce passage mesuré de **Top 50 → Top 100 → Top 200** justifie pleinement l'inclusion dans le Protocole v1.2 de l'**analyse de sensibilité à profondeur constante Top 50** sur l'ensemble des 40 années (1985–2024).
+- **Statut** : Compilation exhaustive achevée **sans tirage aléatoire** et **sans téléchargement de paroles** (Livrable 2 — Phase A clôturée)
+- **Date de compilation** : 24 novembre 2026
+- **Source** : Archives hebdomadaires officielles des singles en France (SNEP / Hung Medien, `lescharts.com/singles/YYYY-MM-DD`)
+- **Script reproductible** : `scripts/compile_sampling_frame_1985_2024.py`
 
 ---
 
-## 2. Test de faisabilité sur la strate la plus étroite (`1985–1989`, Top 50)
+## 1. Artefacts produits et empreintes SHA-256 (`data/sampling_frame_v2/`)
 
-Pour vérifier avant collecte si l'objectif de **250 chansons francophones confirmatoires par bloc quinquennal** ($N = 2\,000$ total) est accessible même dans la strate la plus étroite (`1985–1989`, Top 50) :
-
-- **Mesure empirique sur 1985** (12 semaines mensuelles sondées sur 52, 12/12 réussies) : **198 œuvres distinctes** (toutes langues confondues) recensées sur seulement 12 semaines.
-- **Projection prudente sur 52 semaines/an × 5 ans (`1985–1989`)** :
-  - Estimation basse du nombre d'œuvres distinctes toutes langues sur 1985–1989 : **~1 100 à 1 350 titres uniques**.
-  - En supposant une part francophone de ~45–55 % dans le Top 50 des années 1985–1989 : **~500 à 700 œuvres francophones distinctes** dans ce seul bloc quinquennal.
-- **Verdict de faisabilité préliminaire** :
-  - La base de sondage hebdomadaire permet a priori d'atteindre les **250 titres confirmatoires hors pilote** dans chacun des 8 blocs quinquennaux (y compris `1985–1989`), **sous réserve** que le taux de disponibilité exploitable sur LRCLIB dans le bloc `1985–1989` dépasse ~50 % (ce qui sera mesuré exactement lors de la compilation intégrale de la base de sondage, sans biais silencieux).
+| Fichier | Contenu | Empreinte SHA-256 |
+| :--- | :--- | :--- |
+| `weeks_inventory_1985_2024.csv` | **2 121 semaines** (date, statut HTTP, lignes parsées, rang min/max, ex-aequo) | `38708b1427a188f0149ce2c848fe574cafd988ea0e71abcc9dac1063fb75aac0` |
+| `sampling_frame_works_1985_2024.csv` | **20 809 œuvres canoniques uniques** (`/chanson/...`), **9 135 artistes**, `First_Week`, `Best_Rank`, `Eligible_Top50_Constant`, `In_Pilot` | `a7d8a7c55371ca846c7df6bbdee620641a7ac5a891f1fb7df7e1840e7bdd8c04` |
+| `frame_summary_1985_2024.json` | Synthèse machine-readable des effectifs et transitions | *(versionné)* |
+| `power_simulation_wls_real_frame.json` | Simulation Monte Carlo (2 000 réps) de WLS-CR1 sur la base réelle | *(versionné)* |
 
 ---
 
-## 3. Étapes suivantes (conditionnées au feu vert sur Protocole v1.2)
+## 2. Couverture hebdomadaire et semaines manquantes (transparence complète)
 
-1. **Validation de la v1.2** et dépôt figé sur **OSF Registries**.
-2. **Compilation exhaustive de la base de sondage** (`sampling_frame_1985_2024.csv` : ensemble des semaines 1985–2024 dédupliquées par œuvre unique `/chanson/...`, avec année de première entrée, meilleur rang atteint pour le filtre Top 50 constant, et taille exacte $N_h$ de chaque strate).
-3. **Calibration humaine du classifieur de langue** (100 titres annotés couvrant argot/verlan/bilingue).
-4. **Tirage aléatoire stratifié reproductible** (`SEED_V2 = 20261124`) de $N = 2\,000$ titres confirmatoires hors pilote + journalisation des paroles manquantes LRCLIB.
+- **Semaines compilées avec succès (HTTP 200)** : **2 121 / 2 121** (de 52 à 54 semaines par année civile sur 40 ans).
+- **Semaines manquantes (écarts > 7 jours entre deux classements consécutifs)** : exactement **3 semaines absentes** sur 40 ans (couverture $\approx 99{,}86\%$) :
+  1. `1993-09-04 → 1993-09-18` *(14 jours : semaine du 11/09/1993 absente)*
+  2. `2005-02-27 → 2005-03-12` *(13 jours : semaine du 05/03/2005 absente)*
+  3. `2012-10-27 → 2012-11-10` *(14 jours : semaine du 03/11/2012 absente)*
+- **Transitions exactes de profondeur officielle** (vérifiées sur les rangs `<span class="rk">` du tableau, et non par comptage de liens) :
+  - **Top 50** : `1985-01-01` → `1998-02-28` *(51 lignes en 1985-01-01 dues à un ex-aequo officiel au rang 50)*
+  - **Top 100** : dès le **`1998-03-07`** → `2012-02-11` *(ponctuellement 98–99 lignes en 2000-11-04 et 2001-07-21)*
+  - **Top 200** : dès le **`2012-02-18`** → `2024-12-28` *(167 lignes en 2016-02-27)*
+
+---
+
+## 3. Effectifs réels vérifiés des 8 strates quinquennales ($N_h$, toutes langues)
+
+| Bloc quinquennal | Œuvres uniques (Top 50→200) | Œuvres uniques (Top 50 constant) | Ratio Top 50→200 / Top 50 |
+| :--- | :---: | :---: | :---: |
+| **1985–1989** | 941 | 941 | 1,00× |
+| **1990–1994** | 1 045 | 1 045 | 1,00× |
+| **1995–1999** | 1 455 | 1 127 | 1,29× |
+| **2000–2004** | 2 024 | 1 239 | 1,63× |
+| **2005–2009** | 1 489 | 1 159 | 1,28× |
+| **2010–2014** | 3 437 | 1 139 | 3,02× |
+| **2015–2019** | 5 145 | 1 683 | 3,06× |
+| **2020–2024** | 5 273 | 1 966 | 2,68× |
+| **Total** | **20 809** *(9 135 artistes, $\bar{m} = 2{,}278$)* | **10 299** | **2,02×** |
+
+- **Recouvrement avec le pilote ($N = 131$)** : **100 / 131** titres pilotes retrouvés et marqués `In_Pilot = Oui` dans la base hebdomadaire (les 31 autres étant des titres d'albums/classiques non entrés dans le Top Singles hebdomadaire ou crédités différemment).
+- **Point d'attention sur la strate `1985–1989`** : avec **941 œuvres uniques toutes langues**, atteindre 250 titres confirmatoires francophones sur LRCLIB exige qu'au moins ~27 % des 941 titres soient à la fois francophones et disponibles sur LRCLIB — ce qui est plausible mais proche de la limite haute si la part francophone est ~45–50 % et la disponibilité LRCLIB ~60 %. Ce taux sera mesuré exactement lors de la phase de calibration/collecte après dépôt OSF de la **v1.3**.
