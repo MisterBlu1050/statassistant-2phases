@@ -725,17 +725,17 @@ def run_phase2_interpretation(
             *output.get("agent1_methodology_audit", []), *scientific_alerts
         ]
         output["agent2_apa7_report"] = (
-            output.get("agent2_apa7_report", "") + "\n\n**{apa_heading} :** " + caveat
+            output.get("agent2_apa7_report", "") + f"\n\n**{apa_heading} :** " + caveat
         )
         output["agent3_business_summary"] = (
-            output.get("agent3_business_summary", "") + "\n\n**{summary_heading} :** " + caveat
+            output.get("agent3_business_summary", "") + f"\n\n**{summary_heading} :** " + caveat
         )
 
     if llm_config and llm_config.get("enabled"):
         try:
             output = _optional_llm_enrichment(contract, output, llm_config)
             if caveat and output.get("llm_commentary"):
-                output["llm_commentary"] += "\n\n**{llm_heading} :** " + caveat
+                output["llm_commentary"] += f"\n\n**{llm_heading} :** " + caveat
         except Exception as exc:
             output["llm_error"] = f"LLM unavailable ({exc}) — fallback to local expert engine."
 
